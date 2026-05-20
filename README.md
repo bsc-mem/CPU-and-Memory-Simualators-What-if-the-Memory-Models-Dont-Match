@@ -1,4 +1,4 @@
-# Different Perspectives of Memory System Simulation
+# CPU and Memory Simulators: What if the Memory Models Simply don’t Match?
 
 This repository is the artifact repository for a paper on CPU-memory simulator interface correctness.
 
