@@ -38,7 +38,7 @@ Compares two experiment stages by analyzing their `processed/bandwidth_latency.c
 ```bash
 ./scripts/compare-results.sh <stage-a> <stage-b>
 # Example:
-./scripts/compare-results.sh 01-baseline 04-fig5-correctfreq
+./scripts/compare-results.sh 01-baseline 04-correct-freq
 ```
 
 Internal helper:
@@ -62,7 +62,7 @@ source .zsim-env
 
 **Compare two stages** (works against committed CSVs or freshly generated ones):
 ```bash
-./scripts/compare-results.sh 01-baseline 04-fig5-correctfreq
+./scripts/compare-results.sh 01-baseline 04-correct-freq
 ```
 
 -> *For details on `runner.sh`, `run-one.sh`, and the plotting pipeline see [`experiments/README.md`](../experiments/README.md).*

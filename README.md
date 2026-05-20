@@ -67,19 +67,19 @@ The paper evaluates the impact of interface details through a sequence of cumula
 | :--- | :--- | :--- |
 | [`00-damov-native`](experiments/00-damov-native/) | Native baseline reference stage (not part of the generic `runner.sh` pipeline) | N/A |
 | [`01-baseline`](experiments/01-baseline/) | Base simulator coupling | Figure 2 |
-| [`02-fig3new`](experiments/02-fig3new/) | Follow-up interface configuration | Figure 3 |
-| [`03-fig4freqdevide`](experiments/03-fig4freqdevide/) | Follow-up frequency-divider configuration | Figure 4 |
-| [`04-fig5-correctfreq`](experiments/04-fig5-correctfreq/) | Corrected-frequency configuration | Figure 5 |
-| [`05-address-mapping`](experiments/05-address-mapping/) | Physical address mapping accuracy | Figure 6a |
-| [`06-noc`](experiments/06-noc/) | Realistic Network-on-Chip refinement | Figure 6b |
-| [`07-prefetcher`](experiments/07-prefetcher/) | Final Ramulator stage with prefetcher | Figure 6c |
+| [`02-memory-model`](experiments/02-memory-model/) | Follow-up interface configuration | Figure 6 |
+| [`03-clock-scaling`](experiments/03-clock-scaling/) | Follow-up frequency-divider configuration | Figure 7 |
+| [`04-correct-freq`](experiments/04-correct-freq/) | Corrected-frequency configuration | Figure 8 |
+| [`05-address-mapping`](experiments/05-address-mapping/) | Physical address mapping accuracy | Figure 9a |
+| [`06-noc`](experiments/06-noc/) | Realistic Network-on-Chip refinement | Figure 9b |
+| [`07-prefetcher`](experiments/07-prefetcher/) | Final Ramulator stage with prefetcher | Figure 9c |
 
 ### 3.2. Portability Evaluation
 | Stage | Description / Focus | Figure |
 | :--- | :--- | :--- |
-| [`08-portability-ramulator2`](experiments/08-portability-ramulator2/) | Evaluation using Ramulator2 | Figure 7a |
-| [`09-portability-dramsim3`](experiments/09-portability-dramsim3/) | Evaluation using DRAMsim3 | Figure 7b |
-| [`10-portability-dramsys`](experiments/10-portability-dramsys/) | Evaluation using DRAMSys | Extension |
+| [`08-portability-ramulator2`](experiments/08-portability-ramulator2/) | Evaluation using Ramulator2 | Figure 10b |
+| [`09-portability-dramsim3`](experiments/09-portability-dramsim3/) | Evaluation using DRAMsim3 | Figure 10c |
+| [`10-portability-dramsys`](experiments/10-portability-dramsys/) | Evaluation using DRAMSys | Figure 10d |
 | [`11-mem-intensive`](experiments/11-mem-intensive/) | Reserved memory-intensive follow-up stage | Extension |
 | [`12-ramulator2-normalMap`](experiments/12-ramulator2-normalMap/) | Ramulator2 normal-map configuration with MOP4CLXOR address mapping | Extension |
 
@@ -123,7 +123,7 @@ A key contribution of the paper is analyzing the delta between interface correct
 To compare the output of two different stages (e.g., comparing the baseline against the corrected model), use the `compare-results.sh` script:
 
 ```bash
-./scripts/compare-results.sh 01-baseline 04-fig5-correctfreq
+./scripts/compare-results.sh 01-baseline 04-correct-freq
 ```
 It can also compare two explicit CSV files (for example from `test-output/.../processed/bandwidth_latency.csv`).
 
@@ -150,7 +150,7 @@ Raw simulator outputs are intentionally not committed in this double-blind artif
 
 The original `config.sh`, `output/`, and `processing/` trees are intentionally left out because they are either already represented elsewhere in the artifact or are legacy intermediate artifacts not needed for public reproduction.
 
-Figure 6a is one special case worth calling out. The original experiment drop implemented the address-mapping change through a source-only Ramulator toggle. In this artifact, that behavior is exposed through `simulator-source/ramulator/ramulator-configs/DDR4-config-MN4-skylake.cfg`, so the address-mapping stage can be reproduced through configuration rather than by editing source comments by hand.
+Figure 9a is one special case worth calling out. The original experiment drop implemented the address-mapping change through a source-only Ramulator toggle. In this artifact, that behavior is exposed through `simulator-source/ramulator/ramulator-configs/DDR4-config-MN4-skylake.cfg`, so the address-mapping stage can be reproduced through configuration rather than by editing source comments by hand.
 
 Raw data for any runnable stage can be regenerated from the repository root:
 ```bash

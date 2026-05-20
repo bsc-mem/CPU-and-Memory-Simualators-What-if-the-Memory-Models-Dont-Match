@@ -13,8 +13,8 @@ The experiment folders do not duplicate this code. They reference it through sha
 The artifact currently uses two public Ramulator config variants for the main interface stages:
 
 - `ramulator-configs/DDR4-config-MN4.cfg`
-  Default mapping used by the corrected Figure 4 and Figure 5 stages.
+  Default mapping used by the corrected Figure 7 and Figure 8 stages.
 - `ramulator-configs/DDR4-config-MN4-skylake.cfg`
-  Enables `skylake_address_mapping = on` for the Figure 6a address-mapping stage.
+  Enables `skylake_address_mapping = on` for the Figure 9a address-mapping stage.
 
 This keeps the address-mapping experiment reproducible through configuration rather than by commenting and uncommenting code in `ramulator/Memory.h`.

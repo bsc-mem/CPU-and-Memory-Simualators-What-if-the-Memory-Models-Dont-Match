@@ -4,7 +4,7 @@ This stage captures the final portability experiment that swaps the memory backe
 
 ## Paper Figure
 
-This stage corresponds to Figure 7b in the paper.
+This stage corresponds to Figure 10c in the paper.
 
 ## Public Contents
 
@@ -23,7 +23,7 @@ This stage shows that the corrected interface approach is not limited to Ramulat
 
 ## Reproduction Note
 
-The committed portability drop contains the application and interface processed views used in the paper. Those are the public source of truth for Figure 7b in this artifact. The shared `../plot.py` treats the backend-side memory view as optional here and will skip it when the corresponding stats are not available.
+The committed portability drop contains the application and interface processed views used in the paper. Those are the public source of truth for Figure 10c in this artifact. The shared `../plot.py` treats the backend-side memory view as optional here and will skip it when the corresponding stats are not available.
 
 ## Raw Data Source
 

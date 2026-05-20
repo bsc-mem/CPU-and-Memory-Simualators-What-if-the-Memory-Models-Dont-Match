@@ -4,7 +4,7 @@ This stage captures the final Ramulator-backed platform with address mapping, th
 
 ## Paper Figure
 
-This stage corresponds to Figure 6c in the paper.
+This stage corresponds to Figure 9c in the paper.
 
 ## Public Contents
 
@@ -19,11 +19,11 @@ Use the shared experiment entrypoints in `../runner.sh`, `../run-one.sh`, and `.
 
 ## Intended Claim
 
-This stage is the closest-to-hardware Ramulator result in the current paper flow. Relative to Figure 6a, it combines the realistic NoC and the prefetcher on top of the corrected interface and address mapping.
+This stage is the closest-to-hardware Ramulator result in the current paper flow. Relative to Figure 9a, it combines the realistic NoC and the prefetcher on top of the corrected interface and address mapping.
 
 ## Reproduction Note
 
-The authoritative drop available so far is the final combined stage, not a standalone NoC-only snapshot. As a result, this folder is the source of truth for Figure 6c, while `06-noc` remains reserved for a future NoC-only drop if one is shared later.
+The authoritative drop available so far is the final combined stage, not a standalone NoC-only snapshot. As a result, this folder is the source of truth for Figure 9c, while `06-noc` remains reserved for a future NoC-only drop if one is shared later.
 
 ## Raw Data Source
 

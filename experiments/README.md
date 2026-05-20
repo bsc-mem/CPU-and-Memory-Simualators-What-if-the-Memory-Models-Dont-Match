@@ -114,7 +114,7 @@ The committed paper figures in `experiments/<stage>/figures/` are **not** touche
 Use `compare-results.sh` to quantify the delta between two stages from their committed (or freshly generated) `processed/bandwidth_latency.csv`:
 
 ```bash
-./scripts/compare-results.sh 01-baseline 04-fig5-correctfreq
+./scripts/compare-results.sh 01-baseline 04-correct-freq
 ```
 
 You can also point it at a freshly generated CSV:
@@ -122,7 +122,7 @@ You can also point it at a freshly generated CSV:
 ```bash
 ./scripts/compare-results.sh \
   test-output/01-baseline/processed/bandwidth_latency.csv \
-  test-output/04-fig5-correctfreq/processed/bandwidth_latency.csv
+  test-output/04-correct-freq/processed/bandwidth_latency.csv
 ```
 
 ## Experiment Gallery
@@ -136,25 +136,25 @@ Paper figure: Figure 2
 |:---:|:---:|:---:|
 | <img src="01-baseline/figures/pngs/bandwidth_latency_ramulator.png" height="220"> | <img src="01-baseline/figures/pngs/bandwidth_latency_zsim_mem.png" height="220"> | <img src="01-baseline/figures/pngs/bandwidth_latency_zsim_core.png" height="220"> |
 
-### `02-fig3new`
+### `02-memory-model`
 
-Paper figure: Figure 3  
-
-| Memory simulator view | Memory interface view | Application view |
-|:---:|:---:|:---:|
-| Results omitted in this snapshot | Results omitted in this snapshot | Results omitted in this snapshot |
-
-### `03-fig4freqdevide`
-
-Paper figure: Figure 4  
+Paper figure: Figure 6  
 
 | Memory simulator view | Memory interface view | Application view |
 |:---:|:---:|:---:|
 | Results omitted in this snapshot | Results omitted in this snapshot | Results omitted in this snapshot |
 
-### `04-fig5-correctfreq`
+### `03-clock-scaling`
 
-Paper figure: Figure 5  
+Paper figure: Figure 7  
+
+| Memory simulator view | Memory interface view | Application view |
+|:---:|:---:|:---:|
+| Results omitted in this snapshot | Results omitted in this snapshot | Results omitted in this snapshot |
+
+### `04-correct-freq`
+
+Paper figure: Figure 8  
 
 | Memory simulator view | Memory interface view | Application view |
 |:---:|:---:|:---:|
@@ -162,28 +162,28 @@ Paper figure: Figure 5
 
 ### `05-address-mapping`
 
-Paper figure: Figure 6a  
+Paper figure: Figure 9a  
 | Memory simulator view | Memory interface view | Application view |
 |:---:|:---:|:---:|
 | <img src="05-address-mapping/figures/pngs/bandwidth_latency_ramulator.png" height="220"> | <img src="05-address-mapping/figures/pngs/bandwidth_latency_zsim_mem.png" height="220"> | <img src="05-address-mapping/figures/pngs/bandwidth_latency_zsim_core.png" height="220"> |
 
 ### `06-noc`
 
-Paper figure: Figure 6b  
+Paper figure: Figure 9b  
 | Memory simulator view | Memory interface view | Application view |
 |:---:|:---:|:---:|
 | <img src="06-noc/figures/pngs/bandwidth_latency_ramulator.png" height="220"> | <img src="06-noc/figures/pngs/bandwidth_latency_zsim_mem.png" height="220"> | <img src="06-noc/figures/pngs/bandwidth_latency_zsim_core.png" height="220"> |
 
 ### `07-prefetcher`
 
-Paper figure: Figure 6c  
+Paper figure: Figure 9c  
 | Memory simulator view | Memory interface view | Application view |
 |:---:|:---:|:---:|
 | <img src="07-prefetcher/figures/pngs/bandwidth_latency_ramulator.png" height="220"> | <img src="07-prefetcher/figures/pngs/bandwidth_latency_zsim_mem.png" height="220"> | <img src="07-prefetcher/figures/pngs/bandwidth_latency_zsim_core.png" height="220"> |
 
 ### `08-portability-ramulator2`
 
-Paper figure: Figure 7a  
+Paper figure: Figure 10b  
 Committed views: memory interface and application  
 | Memory interface view | Application view |
 |:---:|:---:|
@@ -191,7 +191,7 @@ Committed views: memory interface and application
 
 ### `09-portability-dramsim3`
 
-Paper figure: Figure 7b  
+Paper figure: Figure 10c  
 Committed views: memory interface and application  
 | Memory interface view | Application view |
 |:---:|:---:|
@@ -199,7 +199,7 @@ Committed views: memory interface and application
 
 ### `10-portability-dramsys`
 
-Paper figure: extension  
+Paper figure: Figure 10d  
 Committed views: configuration only in this snapshot.
 
 ### `11-mem-intensive`

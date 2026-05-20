@@ -4,7 +4,7 @@ This stage captures the final portability experiment that swaps the memory backe
 
 ## Paper Figure
 
-This stage corresponds to Figure 7a in the paper.
+This stage corresponds to Figure 10b in the paper.
 
 ## Public Contents
 
@@ -23,7 +23,7 @@ This stage shows that the corrected interface approach is not limited to the ori
 
 ## Reproduction Note
 
-The committed portability drop contains the application and interface processed views used in the paper. Those are the public source of truth for Figure 7a in this artifact. The shared `../plot.py` treats the backend-side memory view as optional here and will skip it when the corresponding stats are not available, which matches the Ramulator2-specific plotter that Pouya used for the authoritative drop.
+The committed portability drop contains the application and interface processed views used in the paper. Those are the public source of truth for Figure 10b in this artifact. The shared `../plot.py` treats the backend-side memory view as optional here and will skip it when the corresponding stats are not available, which matches the Ramulator2-specific plotter that Pouya used for the authoritative drop.
 
 ## Raw Data Source
 

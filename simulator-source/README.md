@@ -142,7 +142,7 @@ In the original implementation, enabling this required manually commenting and u
 ramulator/ramulator-configs/DDR4-config-MN4-skylake.cfg
 ```
 
-The Figure 6a (address-mapping) experiment stage selects this config file, enabling Skylake-specific address mapping through configuration rather than source modification. This is the only interface-sensitive behavior in the artifact that was originally source-controlled; all other interface parameters are driven by `sb.cfg`.
+The Figure 9a (address-mapping) experiment stage selects this config file, enabling Skylake-specific address mapping through configuration rather than source modification. This is the only interface-sensitive behavior in the artifact that was originally source-controlled; all other interface parameters are driven by `sb.cfg`.
 
 ---
 
