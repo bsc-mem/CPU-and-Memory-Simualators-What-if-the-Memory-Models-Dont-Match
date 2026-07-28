@@ -4,7 +4,25 @@ This repository is the artifact repository for a paper on CPU-memory simulator i
 
 This repository shares the final, corrected simulator source code, the benchmark source code, the committed processed results, and the scripts needed to rerun or compare those stages. It is designed to allow easy reproduction of the exact environment and results discussed in the paper.
 
+## Paper Reference
+
+**CPU and Memory Simulators: What if the Memory Models Simply don’t Match?**
+
+Authors:
+
+- Pouya Esmaili-Dokht — Barcelona Supercomputing Center; Universitat Politècnica de Catalunya
+- Arash Yadegari — Barcelona Supercomputing Center; Sharif University of Technology
+- Victor Xirau — Barcelona Supercomputing Center
+- Julian Pavon Rivera — Barcelona Supercomputing Center
+- Hamid Sarbazi-Azad — Sharif University of Technology; IPM
+- Adrian Cristal — Barcelona Supercomputing Center; Universitat Politècnica de Catalunya
+- Eduard Ayguadé — Universitat Politècnica de Catalunya; Barcelona Supercomputing Center
+- Petar Radojković — Barcelona Supercomputing Center
+
+Site: [Project repository](https://github.com/bsc-mem/CPU-and-Memory-Simulators-What-if-the-Memory-Models-Dont-Match-)
+
 ## Table of Contents
+- [Paper Reference](#paper-reference)
 - [1. Repository Architecture](#1-repository-architecture)
 - [2. Environment Setup](#2-environment-setup)
 - [3. Experiment Reproduction](#3-experiment-reproduction)
@@ -25,7 +43,7 @@ The repository is organized so that the source code is shared once, but is highl
 | `experiments/` | **The Configurations & Results.** One folder per paper stage. Runnable stages include `sb.cfg`. Committed outputs, when present, live under `processed/` and `figures/`. <br>-> *See [`experiments/README.md`](experiments/README.md) for details on the execution flow and shared run entrypoints.* |
 | `scripts/` | **The Automation.** Repository-level helpers for environment setup, benchmark builds, result processing, and comparison. <br>-> *See [`scripts/README.md`](scripts/README.md) for the script catalog.* |
 
-Due to the heavy nature of raw simulator outputs, full raw traces are not committed in this double-blind artifact snapshot. For details on what is committed versus what is regenerated locally, please refer to the [Raw Data Policy](#5-raw-data-policy) section.
+Due to the heavy nature of raw simulator outputs, full raw traces are not committed in this artifact repository. For details on what is committed versus what is regenerated locally, please refer to the [Raw Data Policy](#5-raw-data-policy) section.
 
 ---
 
@@ -131,7 +149,7 @@ It can also compare two explicit CSV files (for example from `test-output/.../pr
 
 ## 5. Raw Data Policy
 
-To balance reproducibility with repository size, this artifact distinguishes between data that is committed to version control and data that is regenerated locally. When a stage includes committed results, they are stored as a processed CSV under `processed/` plus the PDF figure set under `figures/`, while the raw simulation traces are intentionally omitted from this double-blind snapshot.
+To balance reproducibility with repository size, this artifact distinguishes between data that is committed to version control and data that is regenerated locally. When a stage includes committed results, they are stored as a processed CSV under `processed/` plus the PDF figure set under `figures/`, while the raw simulation traces are intentionally omitted from the repository.
 
 ### 5.1. Data Committed to Version Control
 - **Experiment configurations:** `sb.cfg` files for runnable stages, with per-stage notes in each experiment README
@@ -146,7 +164,7 @@ To keep the repository lightweight and avoid Git's storage limitations, the foll
 - Legacy `output/` PDFs and `processing/.../plots/` directories that duplicate figures already committed in the artifact
 
 ### 5.3. Regenerating Raw Data
-Raw simulator outputs are intentionally not committed in this double-blind artifact snapshot. They can be regenerated with the provided runner and plotting scripts.
+Raw simulator outputs are intentionally not committed in this artifact repository. They can be regenerated with the provided runner and plotting scripts.
 
 The original `config.sh`, `output/`, and `processing/` trees are intentionally left out because they are either already represented elsewhere in the artifact or are legacy intermediate artifacts not needed for public reproduction.
 
