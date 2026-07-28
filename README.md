@@ -99,7 +99,6 @@ The paper evaluates the impact of interface details through a sequence of cumula
 | [`09-portability-dramsim3`](experiments/09-portability-dramsim3/) | Evaluation using DRAMsim3 | Figure 10c |
 | [`10-portability-dramsys`](experiments/10-portability-dramsys/) | Evaluation using DRAMSys | Figure 10d |
 | [`11-mem-intensive`](experiments/11-mem-intensive/) | Reserved memory-intensive follow-up stage | Extension |
-| [`12-ramulator2-normalMap`](experiments/12-ramulator2-normalMap/) | Ramulator2 normal-map configuration with MOP4CLXOR address mapping | Extension |
 
 ### 3.3. Running and Plotting
 

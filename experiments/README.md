@@ -206,8 +206,3 @@ Committed views: configuration only in this snapshot.
 
 Paper figure: extension  
 Reserved stage. Raw simulator outputs are intentionally omitted from this repository.
-
-### `12-ramulator2-normalMap`
-
-Paper figure: extension  
-Committed views: configuration only in this snapshot. This stage uses Ramulator2 with the MOP4CLXOR address mapper.
