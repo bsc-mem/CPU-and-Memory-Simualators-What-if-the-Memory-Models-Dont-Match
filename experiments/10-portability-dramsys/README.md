@@ -18,3 +18,11 @@ This stage corresponds to Figure 10d in the paper.
   DRAMSys-backed config for this portability stage.
 
 Use the shared experiment entrypoints in `../runner.sh`, `../run-one.sh`, and `../plot.py`.
+
+## Raw Results
+
+| Item | Value |
+| :--- | :--- |
+| Raw archive | `[NEW-ZENODO-10-DRAMSYS-RAW]` |
+| SHA-256 | `NEW-SHA256-10-DRAMSYS` |
+| Status | `PENDING_NEW_RELEASE` |

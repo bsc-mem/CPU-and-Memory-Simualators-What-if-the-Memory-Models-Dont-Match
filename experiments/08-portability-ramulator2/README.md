@@ -25,7 +25,10 @@ This stage shows that the corrected interface approach is not limited to the ori
 
 The committed portability drop contains the application and interface processed views used in the paper. Those are the public source of truth for Figure 10b in this artifact. The shared `../plot.py` treats the backend-side memory view as optional here and will skip it when the corresponding stats are not available, which matches the Ramulator2-specific plotter that Pouya used for the authoritative drop.
 
-## Raw Data Source
+## Raw Results
 
-- processed public outputs: committed under `processed/` and `figures/`
-- mirrored external raw input: `bw-lat/`
+| Item | Value |
+| :--- | :--- |
+| Raw archive | `[NEW-ZENODO-08-RAMULATOR2-RAW]` |
+| SHA-256 | `NEW-SHA256-08-RAMULATOR2` |
+| Status | `PENDING_NEW_RELEASE` |

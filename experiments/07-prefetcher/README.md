@@ -25,7 +25,10 @@ This stage is the closest-to-hardware Ramulator result in the current paper flow
 
 The authoritative drop available so far is the final combined stage, not a standalone NoC-only snapshot. As a result, this folder is the source of truth for Figure 9c, while `06-noc` remains reserved for a future NoC-only drop if one is shared later.
 
-## Raw Data Source
+## Raw Results
 
-- processed public outputs: committed under `processed/` and `figures/`
-- mirrored external raw input: `bw-lat/`
+| Item | Value |
+| :--- | :--- |
+| Raw archive | `[NEW-ZENODO-07-PREFETCHER-RAW]` |
+| SHA-256 | `NEW-SHA256-07-PREFETCHER` |
+| Status | `PENDING_NEW_RELEASE` |

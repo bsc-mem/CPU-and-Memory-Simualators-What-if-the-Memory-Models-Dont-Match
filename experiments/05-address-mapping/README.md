@@ -25,7 +25,10 @@ This stage isolates the effect of the Intel Skylake address mapping after the in
 
 The authoritative Figure 9a source drop carries the same top-level `sb.cfg` shape as Figure 8. The artifact exposes the actual stage change through `../../simulator-source/ramulator/ramulator-configs/DDR4-config-MN4-skylake.cfg`, which enables `skylake_address_mapping = on` in the shared Ramulator source tree.
 
-## Raw Data Source
+## Raw Results
 
-- processed public outputs: committed under `processed/` and `figures/`
-- mirrored external raw input: `bw-lat/`
+| Item | Value |
+| :--- | :--- |
+| Raw archive | `[NEW-ZENODO-05-ADDRESS-MAPPING-RAW]` |
+| SHA-256 | `NEW-SHA256-05-ADDRESS-MAPPING` |
+| Status | `PENDING_NEW_RELEASE` |

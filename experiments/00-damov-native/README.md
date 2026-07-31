@@ -21,4 +21,10 @@ The DAMOV simulator logic is intentionally kept unchanged for this artifact. The
 
 - public structure: populated
 - committed processed paper outputs: not yet added
-- raw simulator outputs: intentionally omitted from this snapshot
+## Raw Results
+
+| Item | Value |
+| :--- | :--- |
+| Raw archive | `[NEW-ZENODO-00-DAMOV-RAW]` |
+| SHA-256 | `NEW-SHA256-00-DAMOV` |
+| Status | `PENDING_NEW_RELEASE` |

@@ -25,7 +25,10 @@ This stage shows that the corrected interface approach is not limited to Ramulat
 
 The committed portability drop contains the application and interface processed views used in the paper. Those are the public source of truth for Figure 10c in this artifact. The shared `../plot.py` treats the backend-side memory view as optional here and will skip it when the corresponding stats are not available.
 
-## Raw Data Source
+## Raw Results
 
-- processed public outputs: committed under `processed/` and `figures/`
-- mirrored external raw input: `bw-lat/`
+| Item | Value |
+| :--- | :--- |
+| Raw archive | `[NEW-ZENODO-09-DRAMSIM3-RAW]` |
+| SHA-256 | `NEW-SHA256-09-DRAMSIM3` |
+| Status | `PENDING_NEW_RELEASE` |

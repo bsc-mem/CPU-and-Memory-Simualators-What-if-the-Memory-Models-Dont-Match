@@ -21,7 +21,10 @@ Use the shared experiment entrypoints in `../runner.sh`, `../run-one.sh`, and `.
 
 This stage is the reference point for the later corrected-interface comparison.
 
-## Raw Data Source
+## Raw Results
 
-- processed public outputs: committed under `processed/` and `figures/`
-- mirrored external raw input: `bw-lat/`
+| Item | Value |
+| :--- | :--- |
+| Raw archive | `[NEW-ZENODO-01-BASELINE-RAW]` |
+| SHA-256 | `NEW-SHA256-01-BASELINE` |
+| Status | `PENDING_NEW_RELEASE` |

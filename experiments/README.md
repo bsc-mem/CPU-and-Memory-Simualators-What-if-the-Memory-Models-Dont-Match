@@ -27,7 +27,26 @@ The committed outputs follow the three-view terminology used in the paper:
 - `bandwidth_latency_zsim_mem.*`: memory interface view
 - `bandwidth_latency_zsim_core.*`: application view
 
-Raw simulator outputs are intentionally omitted from this double-blind artifact snapshot.
+Raw results are released separately from the Git repository. The current release links are left as placeholders below and will be filled in as each stage is validated.
+
+## Raw Results
+
+| Stage | Raw results | Archive URL | SHA-256 |
+| :--- | :--- | :--- | :--- |
+| `00-damov-native` | Pending new release | `[NEW-ZENODO-00-DAMOV-RAW]` | `NEW-SHA256-00-DAMOV` |
+| `01-baseline` | Pending new release | `[NEW-ZENODO-01-BASELINE-RAW]` | `NEW-SHA256-01-BASELINE` |
+| `02-memory-model` | Pending new release | `[NEW-ZENODO-02-MEMORY-MODEL-RAW]` | `NEW-SHA256-02-MEMORY-MODEL` |
+| `03-clock-scaling` | Pending new release | `[NEW-ZENODO-03-CLOCK-SCALING-RAW]` | `NEW-SHA256-03-CLOCK-SCALING` |
+| `04-correct-freq` | Pending new release | `[NEW-ZENODO-04-CORRECT-FREQ-RAW]` | `NEW-SHA256-04-CORRECT-FREQ` |
+| `05-address-mapping` | Pending new release | `[NEW-ZENODO-05-ADDRESS-MAPPING-RAW]` | `NEW-SHA256-05-ADDRESS-MAPPING` |
+| `06-noc` | Pending new release | `[NEW-ZENODO-06-NOC-RAW]` | `NEW-SHA256-06-NOC` |
+| `07-prefetcher` | Pending new release | `[NEW-ZENODO-07-PREFETCHER-RAW]` | `NEW-SHA256-07-PREFETCHER` |
+| `08-portability-ramulator2` | Pending new release | `[NEW-ZENODO-08-RAMULATOR2-RAW]` | `NEW-SHA256-08-RAMULATOR2` |
+| `09-portability-dramsim3` | Pending new release | `[NEW-ZENODO-09-DRAMSIM3-RAW]` | `NEW-SHA256-09-DRAMSIM3` |
+| `10-portability-dramsys` | Pending new release | `[NEW-ZENODO-10-DRAMSYS-RAW]` | `NEW-SHA256-10-DRAMSYS` |
+| `11-mem-intensive` | Reserved | `N/A` | `N/A` |
+
+Replace each bracketed archive placeholder with the URL for the new raw-results release once the corresponding experiment has been checked.
 
 ## Shared Entrypoints
 
@@ -205,4 +224,4 @@ Committed views: configuration only in this snapshot.
 ### `11-mem-intensive`
 
 Paper figure: extension  
-Reserved stage. Raw simulator outputs are intentionally omitted from this repository.
+Reserved stage. Raw results will be linked here if this stage is released.

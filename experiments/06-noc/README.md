@@ -25,7 +25,10 @@ This stage isolates the effect of the realistic NoC refinement. Relative to Figu
 
 The authoritative Figure 9b source drop still relied on a source-controlled Ramulator address-mapping change. In this public artifact, that behavior remains reproducible through configuration by pointing to `../../simulator-source/ramulator/ramulator-configs/DDR4-config-MN4-skylake.cfg`. This keeps the published source tree shared across all stages while preserving the Figure 9b behavior.
 
-## Raw Data Source
+## Raw Results
 
-- processed public outputs: committed under `processed/` and `figures/`
-- mirrored external raw input: `bw-lat/`
+| Item | Value |
+| :--- | :--- |
+| Raw archive | `[NEW-ZENODO-06-NOC-RAW]` |
+| SHA-256 | `NEW-SHA256-06-NOC` |
+| Status | `PENDING_NEW_RELEASE` |

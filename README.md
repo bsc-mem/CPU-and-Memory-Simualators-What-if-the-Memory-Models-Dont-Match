@@ -19,8 +19,6 @@ Authors:
 - Eduard Ayguadé — Universitat Politècnica de Catalunya; Barcelona Supercomputing Center
 - Petar Radojković — Barcelona Supercomputing Center
 
-Site: [Project repository](https://github.com/bsc-mem/CPU-and-Memory-Simulators-What-if-the-Memory-Models-Dont-Match-)
-
 ## Table of Contents
 - [Paper Reference](#paper-reference)
 - [1. Repository Architecture](#1-repository-architecture)
@@ -43,7 +41,7 @@ The repository is organized so that the source code is shared once, but is highl
 | `experiments/` | **The Configurations & Results.** One folder per paper stage. Runnable stages include `sb.cfg`. Committed outputs, when present, live under `processed/` and `figures/`. <br>-> *See [`experiments/README.md`](experiments/README.md) for details on the execution flow and shared run entrypoints.* |
 | `scripts/` | **The Automation.** Repository-level helpers for environment setup, benchmark builds, result processing, and comparison. <br>-> *See [`scripts/README.md`](scripts/README.md) for the script catalog.* |
 
-Due to the heavy nature of raw simulator outputs, full raw traces are not committed in this artifact repository. For details on what is committed versus what is regenerated locally, please refer to the [Raw Data Policy](#5-raw-data-policy) section.
+The processed figures and configuration files are kept in Git. The raw simulator traces are released separately and are listed in the [raw-results table](#51-raw-results).
 
 ---
 
@@ -148,24 +146,30 @@ It can also compare two explicit CSV files (for example from `test-output/.../pr
 
 ## 5. Raw Data Policy
 
-To balance reproducibility with repository size, this artifact distinguishes between data that is committed to version control and data that is regenerated locally. When a stage includes committed results, they are stored as a processed CSV under `processed/` plus the PDF figure set under `figures/`, while the raw simulation traces are intentionally omitted from the repository.
+The repository contains the configurations, scripts, processed CSV files, and figures needed to inspect each stage. Raw simulator output is distributed as a separate archive for each stage so that the large trace files do not have to be stored in Git. The links below are placeholders for the new artifact release and will be filled in after each experiment has been checked.
 
-### 5.1. Data Committed to Version Control
-- **Experiment configurations:** `sb.cfg` files for runnable stages, with per-stage notes in each experiment README
-- **Shared automation:** Repository-level helper scripts and entrypoints
-- **Processed outputs:** CSV tables in `processed/` and PDF figures in `figures/`, for stages that include committed results
+### 5.1. Raw Results
 
-### 5.2. Data Omitted From Version Control
-To keep the repository lightweight and avoid Git's storage limitations, the following are omitted from version control:
-- Full `measuring/bw-lat/` directories containing raw simulation traces
-- Complete bulk simulator outputs and HDF5 result sets
-- Large repeated log files and intermediate artifacts
-- Legacy `output/` PDFs and `processing/.../plots/` directories that duplicate figures already committed in the artifact
+| Stage | Raw results | Archive URL | SHA-256 |
+| :--- | :--- | :--- | :--- |
+| `00-damov-native` | Pending new release | `[NEW-ZENODO-00-DAMOV-RAW]` | `NEW-SHA256-00-DAMOV` |
+| `01-baseline` | Pending new release | `[NEW-ZENODO-01-BASELINE-RAW]` | `NEW-SHA256-01-BASELINE` |
+| `02-memory-model` | Pending new release | `[NEW-ZENODO-02-MEMORY-MODEL-RAW]` | `NEW-SHA256-02-MEMORY-MODEL` |
+| `03-clock-scaling` | Pending new release | `[NEW-ZENODO-03-CLOCK-SCALING-RAW]` | `NEW-SHA256-03-CLOCK-SCALING` |
+| `04-correct-freq` | Pending new release | `[NEW-ZENODO-04-CORRECT-FREQ-RAW]` | `NEW-SHA256-04-CORRECT-FREQ` |
+| `05-address-mapping` | Pending new release | `[NEW-ZENODO-05-ADDRESS-MAPPING-RAW]` | `NEW-SHA256-05-ADDRESS-MAPPING` |
+| `06-noc` | Pending new release | `[NEW-ZENODO-06-NOC-RAW]` | `NEW-SHA256-06-NOC` |
+| `07-prefetcher` | Pending new release | `[NEW-ZENODO-07-PREFETCHER-RAW]` | `NEW-SHA256-07-PREFETCHER` |
+| `08-portability-ramulator2` | Pending new release | `[NEW-ZENODO-08-RAMULATOR2-RAW]` | `NEW-SHA256-08-RAMULATOR2` |
+| `09-portability-dramsim3` | Pending new release | `[NEW-ZENODO-09-DRAMSIM3-RAW]` | `NEW-SHA256-09-DRAMSIM3` |
+| `10-portability-dramsys` | Pending new release | `[NEW-ZENODO-10-DRAMSYS-RAW]` | `NEW-SHA256-10-DRAMSYS` |
+| `11-mem-intensive` | Reserved | `N/A` | `N/A` |
 
-### 5.3. Regenerating Raw Data
-Raw simulator outputs are intentionally not committed in this artifact repository. They can be regenerated with the provided runner and plotting scripts.
+Replace the bracketed archive placeholder with the corresponding raw-results URL and add the checksum published with that archive. The previous artifact release is not linked here.
 
-The original `config.sh`, `output/`, and `processing/` trees are intentionally left out because they are either already represented elsewhere in the artifact or are legacy intermediate artifacts not needed for public reproduction.
+### 5.2. Regenerating Results
+
+Raw data can also be regenerated from the repository root:
 
 Figure 9a is one special case worth calling out. The original experiment drop implemented the address-mapping change through a source-only Ramulator toggle. In this artifact, that behavior is exposed through `simulator-source/ramulator/ramulator-configs/DDR4-config-MN4-skylake.cfg`, so the address-mapping stage can be reproduced through configuration rather than by editing source comments by hand.
 
