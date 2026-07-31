@@ -14,7 +14,7 @@ Primary one-shot entrypoint for first-time setup and rebuilds. It wraps dependen
 ```
 
 ### `setup-env.sh`
-Generates the `.zsim-env` file at the repository root. The three memory-simulator paths (`DRAMSIM3PATH`, `RAMULATORPATH`, `RAMULATOR2PATH`) are resolved automatically from the repo. `PINPATH` and `HDF5_HOME` are discovered from common system prefixes; if missing, configure the dependency URLs in `setup-env.sh` or install them manually.
+Generates the `.zsim-env` file at the repository root. The three memory-simulator paths (`DRAMSIM3PATH`, `RAMULATORPATH`, `RAMULATOR2PATH`) are resolved automatically from the repo. `PINPATH` and `HDF5_HOME` are discovered from common system prefixes; if missing, `setup-env.sh` downloads the Pin and HDF5 bundles from the existing Zenodo dependency record, or they can be installed manually.
 
 ```bash
 ./scripts/setup-env.sh

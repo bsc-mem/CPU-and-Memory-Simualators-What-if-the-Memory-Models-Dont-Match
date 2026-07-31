@@ -12,9 +12,11 @@
 set -euo pipefail
 
 # ── Dependency download URLs ──────────────────────────────────────────────────
-# Update these when the hosting location changes.
-PIN_DOWNLOAD_URL=""
-HDF5_DOWNLOAD_URL=""
+# Pin and HDF5 are reusable build dependencies. Their bundles remain hosted
+# in the existing Zenodo dependency record; experiment raw results use the
+# separate new-release placeholders documented in the READMEs.
+PIN_DOWNLOAD_URL="https://zenodo.org/records/19629352/files/pin.tar.gz?download=1"
+HDF5_DOWNLOAD_URL="https://zenodo.org/records/19629352/files/hdf5.tar.gz?download=1"
 PIN_SHA256="290346631b7a79f99aacca891176fb4ce4a574f614a1dfcde7e2d325f83a9603"
 HDF5_SHA256="c5e5105facec8b14d24fc530b64ef32eba54052f4e242fba1199ca17141bd12e"
 # ─────────────────────────────────────────────────────────────────────────────
@@ -63,7 +65,7 @@ download_and_extract() {
     local expected_sha256="$4"
 
     if [[ -z "$url" ]]; then
-        echo -e "  ${RED}✘${NC}  No download URL is configured for $label in this anonymous artifact snapshot." >&2
+        echo -e "  ${RED}✘${NC}  No download URL is configured for $label in scripts/setup-env.sh." >&2
         return 1
     fi
 

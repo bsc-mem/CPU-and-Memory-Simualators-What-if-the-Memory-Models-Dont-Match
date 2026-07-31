@@ -11,5 +11,5 @@ This stage corresponds to Figure 7 in the paper.
 | Item | Value |
 | :--- | :--- |
 | Raw archive | `[NEW-ZENODO-03-CLOCK-SCALING-RAW]` |
-| SHA-256 | `NEW-SHA256-03-CLOCK-SCALING` |
+| MD5SUM | `NEW-MD5SUM-03-CLOCK-SCALING` |
 | Status | `PENDING_NEW_RELEASE` |

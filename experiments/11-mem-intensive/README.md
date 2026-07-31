@@ -7,5 +7,5 @@ Reserved for the memory-intensive follow-up stage. If released, its raw-results 
 | Item | Value |
 | :--- | :--- |
 | Raw archive | `N/A (reserved)` |
-| SHA-256 | `N/A (reserved)` |
+| MD5SUM | `N/A (reserved)` |
 | Status | `RESERVED` |

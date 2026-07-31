@@ -26,5 +26,5 @@ The DAMOV simulator logic is intentionally kept unchanged for this artifact. The
 | Item | Value |
 | :--- | :--- |
 | Raw archive | `[NEW-ZENODO-00-DAMOV-RAW]` |
-| SHA-256 | `NEW-SHA256-00-DAMOV` |
+| MD5SUM | `NEW-MD5SUM-00-DAMOV` |
 | Status | `PENDING_NEW_RELEASE` |

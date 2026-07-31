@@ -26,5 +26,5 @@ This stage is the reference point for the later corrected-interface comparison.
 | Item | Value |
 | :--- | :--- |
 | Raw archive | `[NEW-ZENODO-01-BASELINE-RAW]` |
-| SHA-256 | `NEW-SHA256-01-BASELINE` |
+| MD5SUM | `NEW-MD5SUM-01-BASELINE` |
 | Status | `PENDING_NEW_RELEASE` |

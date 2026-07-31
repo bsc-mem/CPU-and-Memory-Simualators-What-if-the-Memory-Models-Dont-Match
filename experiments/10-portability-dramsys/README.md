@@ -24,5 +24,5 @@ Use the shared experiment entrypoints in `../runner.sh`, `../run-one.sh`, and `.
 | Item | Value |
 | :--- | :--- |
 | Raw archive | `[NEW-ZENODO-10-DRAMSYS-RAW]` |
-| SHA-256 | `NEW-SHA256-10-DRAMSYS` |
+| MD5SUM | `NEW-MD5SUM-10-DRAMSYS` |
 | Status | `PENDING_NEW_RELEASE` |

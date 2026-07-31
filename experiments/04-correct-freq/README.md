@@ -11,5 +11,5 @@ This stage corresponds to Figure 8 in the paper.
 | Item | Value |
 | :--- | :--- |
 | Raw archive | `[NEW-ZENODO-04-CORRECT-FREQ-RAW]` |
-| SHA-256 | `NEW-SHA256-04-CORRECT-FREQ` |
+| MD5SUM | `NEW-MD5SUM-04-CORRECT-FREQ` |
 | Status | `PENDING_NEW_RELEASE` |
