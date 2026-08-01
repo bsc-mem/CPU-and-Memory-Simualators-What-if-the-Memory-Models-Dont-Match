@@ -67,11 +67,13 @@ public:
 
 Ramulator::Ramulator(const g_string& name, uint32_t domain, unsigned cpuFreq, const std::string& configPath,
     g_vector<IBoundMemLatencyEstimator*> estimators, unsigned numCpus, unsigned cacheLineSize, bool pimMode,
-    const string& application, bool recordMemoryTrace, bool networkOverhead, const std::vector<uint32_t>& trackedCores)
+    const string& application, bool recordMemoryTrace, bool networkOverhead, bool _useClockDivider, bool _useClockCorrection, const std::vector<uint32_t>& trackedCores)
     : name(name), domain(domain), estimators(estimators), pim_mode(pimMode),
       statList(nullptr),
       read_cb_func(std::bind(&Ramulator::onReadComplete, this, std::placeholders::_1)),
-      write_cb_func(std::bind(&Ramulator::onWriteComplete, this, std::placeholders::_1))
+      write_cb_func(std::bind(&Ramulator::onWriteComplete, this, std::placeholders::_1)),
+      useClockDivider(_useClockDivider),
+      useClockCorrection(_useClockCorrection)
     {
     curCycle = 0;
     dramPs = 0, cpuPs = 0;
@@ -91,6 +93,9 @@ Ramulator::Ramulator(const g_string& name, uint32_t domain, unsigned cpuFreq, co
     const double tCK = wrapper->get_tCK();
     const double memFreq = (1 / (tCK / 1000000)) / 1000;
     const double cpuFreqHz = pim_mode ? memFreq : cpuFreq;
+    
+    freqRatio = ceil(cpuFreq/memFreq);
+
     dramPsPerClk = static_cast<uint64_t>(tCK * 1000);
     cpuPsPerClk = static_cast<uint64_t>(1000000. / cpuFreqHz);
     assert(cpuPsPerClk < dramPsPerClk);
@@ -195,19 +200,32 @@ uint32_t Ramulator::tick(uint64_t /*cycle*/) {
     if (procIdx != 0) return 1;
     pushInFlights();
 
-    cpuPs += cpuPsPerClk;
     curCycle++;
+    if(useClockCorrection) 
+    {
+        cpuPs += cpuPsPerClk;
+        
 
-    if (cpuPs > dramPs) {
-        wrapper->tick();
-        dramPs += dramPsPerClk;
-        dramCycle++;
+        if (cpuPs > dramPs) {
+            wrapper->tick();
+            dramPs += dramPsPerClk;
+            dramCycle++;
+        }
+
+        if (cpuPs == dramPs) {
+            cpuPs = 0;
+            dramPs = 0;
+        }
+    }
+    else {
+        if(!useClockDivider || ((tickCounter % freqRatio) == 0)){
+            wrapper->tick();
+        }
+        tickCounter++;
     }
 
-    if (cpuPs == dramPs) {
-        cpuPs = 0;
-        dramPs = 0;
-    }
+
+
 
     return 1;
 }

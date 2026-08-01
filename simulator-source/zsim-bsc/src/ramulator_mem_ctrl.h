@@ -36,6 +36,11 @@ class Ramulator : public MemObject { //one Ramulator controller
     ramulator::RamulatorWrapper* wrapper;
     Stats_ramulator::StatList* statList;
 
+    bool useClockDivider; 
+    bool useClockCorrection;
+    unsigned long long tickCounter = 0;
+    unsigned freqRatio;
+    
     g_multimap<uint64_t, RamulatorAccEvent*> inflightRequests;
 
     uint64_t curCycle;  // processor cycle, for ticking sync
@@ -61,7 +66,7 @@ class Ramulator : public MemObject { //one Ramulator controller
   public:
     Ramulator(const g_string& name, uint32_t domain, unsigned cpuFreq, const std::string& configPath,
               g_vector<IBoundMemLatencyEstimator*> estimators, unsigned numCpus, unsigned cacheLineSize,
-              bool pimMode, const std::string& application, bool recordMemoryTrace, bool networkOverhead,
+              bool pimMode, const std::string& application, bool recordMemoryTrace, bool networkOverhead, bool _useClockDivider, bool _useClockCorrection,
               const std::vector<uint32_t>& trackedCores = {});
     ~Ramulator();
     void finish();
