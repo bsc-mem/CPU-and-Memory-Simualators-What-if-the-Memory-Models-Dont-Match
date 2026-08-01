@@ -3,7 +3,7 @@
 #
 # The three memory-simulator paths are always inside this repo, so they are
 # resolved automatically.  PINPATH and HDF5_HOME are located by searching
-# common system paths; if not found, set them manually or configure artifact URLs below.
+# common system paths; if not found they are downloaded automatically.
 #
 # Usage (from any directory inside the repo):
 #   ./scripts/setup-env.sh
@@ -12,9 +12,7 @@
 set -euo pipefail
 
 # ── Dependency download URLs ──────────────────────────────────────────────────
-# Pin and HDF5 are reusable build dependencies. Their bundles remain hosted
-# in the existing Zenodo dependency record; experiment raw results use the
-# separate new-release placeholders documented in the READMEs.
+# Update these when the hosting location changes.
 PIN_DOWNLOAD_URL="https://zenodo.org/records/19629352/files/pin.tar.gz?download=1"
 HDF5_DOWNLOAD_URL="https://zenodo.org/records/19629352/files/hdf5.tar.gz?download=1"
 PIN_SHA256="290346631b7a79f99aacca891176fb4ce4a574f614a1dfcde7e2d325f83a9603"
@@ -64,15 +62,10 @@ download_and_extract() {
     local label="$3"
     local expected_sha256="$4"
 
-    if [[ -z "$url" ]]; then
-        echo -e "  ${RED}✘${NC}  No download URL is configured for $label in scripts/setup-env.sh." >&2
-        return 1
-    fi
-
     mkdir -p "$dest_dir"
     local archive="$dest_dir/${label}.download"
 
-    echo "    Downloading $label from configured artifact host..." >&2
+    echo "    Downloading $label from Zenodo..." >&2
     curl -s -L -o "$archive" "$url"
 
     # Validate SHA256 if provided
@@ -128,9 +121,8 @@ sys.exit(0 if zipfile.is_zipfile(sys.argv[1]) else 1)
 DRAMSIM3PATH="$REPO_ROOT/simulator-source/dramsim3/DRAMsim3"
 RAMULATORPATH="$REPO_ROOT/simulator-source/ramulator"
 RAMULATOR2PATH="$REPO_ROOT/simulator-source/ramulator2"
-DRAMSYSPATH="$REPO_ROOT/simulator-source/DRAMSys"
 
-for var_name in DRAMSIM3PATH RAMULATORPATH RAMULATOR2PATH DRAMSYSPATH; do
+for var_name in DRAMSIM3PATH RAMULATORPATH RAMULATOR2PATH; do
     path="${!var_name}"
     if [[ -d "$path" ]]; then
         ok "$var_name = $path"
@@ -181,12 +173,12 @@ fi
 if [[ -n "$PINPATH" && -d "$PINPATH" ]]; then
     ok "PINPATH = $PINPATH"
 else
-    warn "Pin 2.14 not found on system — manual setup is required..."
+    warn "Pin 2.14 not found on system — downloading automatically..."
     DEPS_DIR="$REPO_ROOT/dependencies"
     PINPATH=$(download_and_extract "$PIN_DOWNLOAD_URL" "$DEPS_DIR" "pin" "$PIN_SHA256")
     if [[ -z "$PINPATH" || ! -d "$PINPATH" ]]; then
         echo -e "  ${RED}✘${NC}  Pin download or extraction failed." >&2
-        echo -e "  ${RED}✘${NC}  Install Pin 2.14 manually, or configure PIN_DOWNLOAD_URL in scripts/setup-env.sh." >&2
+        echo -e "  ${RED}✘${NC}  Download manually from: $PIN_DOWNLOAD_URL" >&2
         echo -e "  ${RED}✘${NC}  Extract it and set PINPATH in .zsim-env manually." >&2
         exit 1
     fi
@@ -243,12 +235,12 @@ if [[ -z "$HDF5_HOME" ]]; then
 fi
 
 if [[ -z "$HDF5_HOME" ]]; then
-    warn "HDF5 not found on system — manual setup is required..."
+    warn "HDF5 not found on system — downloading automatically..."
     DEPS_DIR="$REPO_ROOT/dependencies"
     HDF5_HOME=$(download_and_extract "$HDF5_DOWNLOAD_URL" "$DEPS_DIR" "hdf5" "$HDF5_SHA256")
     if [[ -z "$HDF5_HOME" || ! -d "$HDF5_HOME" ]]; then
         echo -e "  ${RED}✘${NC}  HDF5 download or extraction failed." >&2
-        echo -e "  ${RED}✘${NC}  Install HDF5 manually, or configure HDF5_DOWNLOAD_URL in scripts/setup-env.sh." >&2
+        echo -e "  ${RED}✘${NC}  Download manually from: $HDF5_DOWNLOAD_URL" >&2
         echo -e "  ${RED}✘${NC}  Extract it and set HDF5_HOME in .zsim-env manually." >&2
         exit 1
     fi
@@ -269,7 +261,6 @@ export HDF5_HOME="$HDF5_HOME"
 export DRAMSIM3PATH="$DRAMSIM3PATH"
 export RAMULATORPATH="$RAMULATORPATH"
 export RAMULATOR2PATH="$RAMULATOR2PATH"
-export DRAMSYSPATH="$DRAMSYSPATH"
 EOF
 
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"

@@ -14,7 +14,7 @@ Primary one-shot entrypoint for first-time setup and rebuilds. It wraps dependen
 ```
 
 ### `setup-env.sh`
-Generates the `.zsim-env` file at the repository root. The three memory-simulator paths (`DRAMSIM3PATH`, `RAMULATORPATH`, `RAMULATOR2PATH`) are resolved automatically from the repo. `PINPATH` and `HDF5_HOME` are discovered from common system prefixes; if missing, `setup-env.sh` downloads the Pin and HDF5 bundles from the existing Zenodo dependency record, or they can be installed manually.
+Generates the `.zsim-env` file at the repository root. The three memory-simulator paths (`DRAMSIM3PATH`, `RAMULATORPATH`, `RAMULATOR2PATH`) are resolved automatically from the repo. `PINPATH` and `HDF5_HOME` are discovered from common system prefixes; if missing, the script attempts to download known-good bundles into `dependencies/`.
 
 ```bash
 ./scripts/setup-env.sh
@@ -38,7 +38,16 @@ Compares two experiment stages by analyzing their `processed/bandwidth_latency.c
 ```bash
 ./scripts/compare-results.sh <stage-a> <stage-b>
 # Example:
-./scripts/compare-results.sh 01-baseline 04-correct-freq
+./scripts/compare-results.sh 01-baseline 04-model-correct
+```
+
+### `download-raw.sh`
+Downloads the externally hosted raw artifacts for a given stage when URLs are published in the stage's `raw-manifest.csv`. See the [Raw Data Policy](../README.md#5-raw-data-policy) for details on what is hosted externally.
+
+```bash
+./scripts/download-raw.sh <stage>
+# Example:
+./scripts/download-raw.sh 01-baseline
 ```
 
 Internal helper:
@@ -62,7 +71,12 @@ source .zsim-env
 
 **Compare two stages** (works against committed CSVs or freshly generated ones):
 ```bash
-./scripts/compare-results.sh 01-baseline 04-correct-freq
+./scripts/compare-results.sh 01-baseline 04-model-correct
+```
+
+**Download published raw artifacts for one stage** (if manifest URLs are final):
+```bash
+./scripts/download-raw.sh 01-baseline
 ```
 
 -> *For details on `runner.sh`, `run-one.sh`, and the plotting pipeline see [`experiments/README.md`](../experiments/README.md).*
