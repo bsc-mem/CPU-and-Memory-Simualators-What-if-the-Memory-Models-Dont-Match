@@ -23,6 +23,6 @@ Use the shared experiment entrypoints in `../runner.sh`, `../run-one.sh`, and `.
 
 | Item | Value |
 | :--- | :--- |
-| Raw archive | `[NEW-ZENODO-10-DRAMSYS-RAW]` |
-| MD5SUM | `NEW-MD5SUM-10-DRAMSYS` |
-| Status | `PENDING_NEW_RELEASE` |
+| Raw archive | `https://zenodo.org/records/21760832/files/10-dramsys.zip?download=1` |
+| MD5SUM | `cc52eb538c221228e72004a9581f4388` |
+| Status | `PENDING_EVALUATION` |

@@ -10,6 +10,6 @@ This stage corresponds to Figure 7 in the paper.
 
 | Item | Value |
 | :--- | :--- |
-| Raw archive | `[NEW-ZENODO-03-CLOCK-SCALING-RAW]` |
-| MD5SUM | `NEW-MD5SUM-03-CLOCK-SCALING` |
-| Status | `PENDING_NEW_RELEASE` |
+| Raw archive | `https://zenodo.org/records/21760832/files/03-clock-scaling.zip?download=1` |
+| MD5SUM | `4ce964d0cb5bbb82a378e3939dac1260` |
+| Status | `PENDING_EVALUATION` |

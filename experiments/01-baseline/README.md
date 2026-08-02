@@ -25,6 +25,6 @@ This stage is the reference point for the later corrected-interface comparison.
 
 | Item | Value |
 | :--- | :--- |
-| Raw archive | `[NEW-ZENODO-01-BASELINE-RAW]` |
-| MD5SUM | `NEW-MD5SUM-01-BASELINE` |
-| Status | `PENDING_NEW_RELEASE` |
+| Raw archive | `https://zenodo.org/records/21760832/files/01-baseline.tar?download=1` |
+| MD5SUM | `bf559ef6fd77f2718e5257991d73b41d` |
+| Status | `PENDING_Evaluation` |

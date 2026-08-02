@@ -29,6 +29,6 @@ The authoritative Figure 9b source drop still relied on a source-controlled Ramu
 
 | Item | Value |
 | :--- | :--- |
-| Raw archive | `[NEW-ZENODO-06-NOC-RAW]` |
-| MD5SUM | `NEW-MD5SUM-06-NOC` |
-| Status | `PENDING_NEW_RELEASE` |
+| Raw archive | `https://zenodo.org/records/21760832/files/06-noc.zip?download=1` |
+| MD5SUM | `5a6fdeb0af978f8eaf4f355e46453a54` |
+| Status | `PENDING_EVALUATION` |

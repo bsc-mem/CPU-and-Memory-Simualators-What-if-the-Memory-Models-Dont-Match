@@ -29,6 +29,6 @@ The committed portability drop contains the application and interface processed 
 
 | Item | Value |
 | :--- | :--- |
-| Raw archive | `[NEW-ZENODO-08-RAMULATOR2-RAW]` |
-| MD5SUM | `NEW-MD5SUM-08-RAMULATOR2` |
-| Status | `PENDING_NEW_RELEASE` |
+| Raw archive | `https://zenodo.org/records/21760832/files/08-ramulator2.zip?download=1` |
+| MD5SUM | `60cb5aac4b34df03c297bdfa7ef85cec` |
+| Status | `PENDING_EVALUATION` |

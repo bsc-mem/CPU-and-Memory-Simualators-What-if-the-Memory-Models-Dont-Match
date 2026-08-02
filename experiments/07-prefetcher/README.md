@@ -29,6 +29,6 @@ The authoritative drop available so far is the final combined stage, not a stand
 
 | Item | Value |
 | :--- | :--- |
-| Raw archive | `[NEW-ZENODO-07-PREFETCHER-RAW]` |
-| MD5SUM | `NEW-MD5SUM-07-PREFETCHER` |
-| Status | `PENDING_NEW_RELEASE` |
+| Raw archive | `https://zenodo.org/records/21760832/files/07-prefetcher.zip?download=1` |
+| MD5SUM | `1e4fd36b3c25af7603f2e817c2448980` |
+| Status | `PENDING_EVALUATION` |

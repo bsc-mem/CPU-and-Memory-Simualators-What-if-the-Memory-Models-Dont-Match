@@ -29,6 +29,6 @@ The committed portability drop contains the application and interface processed 
 
 | Item | Value |
 | :--- | :--- |
-| Raw archive | `[NEW-ZENODO-09-DRAMSIM3-RAW]` |
-| MD5SUM | `NEW-MD5SUM-09-DRAMSIM3` |
-| Status | `PENDING_NEW_RELEASE` |
+| Raw archive | `https://zenodo.org/records/21760832/files/09-dramsim3.zip?download=1` |
+| MD5SUM | `87406cce9943ea51eb6a98ebc8a350f1` |
+| Status | `PENDING_EVALUATION` |

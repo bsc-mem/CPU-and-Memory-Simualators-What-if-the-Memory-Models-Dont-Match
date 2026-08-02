@@ -10,6 +10,6 @@ This stage corresponds to Figure 8 in the paper.
 
 | Item | Value |
 | :--- | :--- |
-| Raw archive | `[NEW-ZENODO-04-CORRECT-FREQ-RAW]` |
-| MD5SUM | `NEW-MD5SUM-04-CORRECT-FREQ` |
-| Status | `PENDING_NEW_RELEASE` |
+| Raw archive | `https://zenodo.org/records/21760832/files/04-correct-freq.zip?download=1` |
+| MD5SUM | `275fea55aeaca6edf0ca918d2a19eaac` |
+| Status | `PENDING_EVALUATION` |

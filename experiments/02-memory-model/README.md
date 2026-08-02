@@ -10,6 +10,6 @@ This stage corresponds to Figure 6 in the paper.
 
 | Item | Value |
 | :--- | :--- |
-| Raw archive | `[NEW-ZENODO-02-MEMORY-MODEL-RAW]` |
-| MD5SUM | `NEW-MD5SUM-02-MEMORY-MODEL` |
-| Status | `PENDING_NEW_RELEASE` |
+| Raw archive | `https://zenodo.org/records/21760832/files/02-memory-model.zip?download=1` |
+| MD5SUM | `88429850cb804319a6528e0c0735d7fa` |
+| Status | `PENDING_EVALUATION` |

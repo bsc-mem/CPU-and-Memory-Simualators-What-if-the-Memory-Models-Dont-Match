@@ -29,6 +29,6 @@ The authoritative Figure 9a source drop carries the same top-level `sb.cfg` shap
 
 | Item | Value |
 | :--- | :--- |
-| Raw archive | `[NEW-ZENODO-05-ADDRESS-MAPPING-RAW]` |
-| MD5SUM | `NEW-MD5SUM-05-ADDRESS-MAPPING` |
-| Status | `PENDING_NEW_RELEASE` |
+| Raw archive | `https://zenodo.org/records/21760832/files/05-address-mapping.zip?download=1` |
+| MD5SUM | `74bb3d8d63cf43ddd06929b9dc27a7f9` |
+| Status | `PENDING_EVALUATION` |
