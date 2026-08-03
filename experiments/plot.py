@@ -11,6 +11,7 @@ import argparse
 import math
 import os
 import re
+import subprocess
 import sys
 from typing import Dict, List, Tuple
 
@@ -59,6 +60,11 @@ PROFILE_ALIASES: Dict[str, str] = {
     "00": "00-damov-native",
     "damov": "00-damov-native",
     "damov-native": "00-damov-native",
+}
+
+AUTO_COMPARE_VIEWS_EXPERIMENTS = {
+    "02-memory-model",
+    "10-fig3new",
 }
 
 
@@ -775,9 +781,14 @@ def generate_plot(
     fig, ax = plt.subplots(figsize=(16, 9))
     # ax.grid(True, linestyle="--", linewidth=0.4, alpha=0.5)
 
+    min_unloaded_lat = float("inf")
+    min_unloaded_bw = None
+
     max_latency = 0.0
     for rd_value, df in dfs_rw.items():
+
         color = calculate_color(rd_value)
+
         ax.plot(
             df["bandwidth_smooth"],
             df["latency_smooth"],
@@ -786,7 +797,30 @@ def generate_plot(
             marker=None,
             label=f"rd={rd_value}%",
         )
+
+        # Find left-most point of this curve
+        unloaded_idx = df["bandwidth_smooth"].idxmin()
+
+        unloaded_bw = df.loc[unloaded_idx, "bandwidth_smooth"]
+        unloaded_lat = df.loc[unloaded_idx, "latency_smooth"]
+
+        # Keep only the global minimum latency
+        if unloaded_lat < min_unloaded_lat:
+            min_unloaded_lat = unloaded_lat
+            min_unloaded_bw = unloaded_bw
+
         max_latency = max(max_latency, df["latency_smooth"].max())
+
+    # Print only the minimum unloaded latency
+    ax.text(
+        min_unloaded_bw + 1,
+        min_unloaded_lat + 3,
+        f"{int(round(min_unloaded_lat))} ns",
+        fontsize=38,
+        color='black',
+        ha='left',
+        va='bottom'
+    )
 
     ax.axvline(x=max_bw, color=calculate_color(75), linewidth=4, linestyle=':', label='max-bandwidth')
     
@@ -795,6 +829,7 @@ def generate_plot(
             color='black', horizontalalignment='right', fontsize=38)
 
     ax.set_xlim(0, max_bw * 1.05)
+    # ax.set_xlim(0, 200)
     ax.set_ylim(0, cfg_float(config, "PLOT_LATENCY_YMAX"))
     
     ax.set_xlabel("Used Memory bandwidth [GB/s]", fontsize=38)
@@ -818,6 +853,25 @@ def generate_plot(
     os.makedirs(png_dir, exist_ok=True)
     fig.savefig(os.path.join(png_dir, png_name), **save_kwargs)
     plt.close(fig)
+
+
+def maybe_run_compare_views(repo_root: str, config_dir: str, output_dir: str) -> None:
+    config_dir_abs = os.path.abspath(config_dir)
+    experiments_root = os.path.abspath(os.path.join(repo_root, "experiments"))
+    experiment_name = os.path.basename(os.path.normpath(config_dir_abs))
+
+    if os.path.dirname(config_dir_abs) != experiments_root:
+        return
+    if experiment_name not in AUTO_COMPARE_VIEWS_EXPERIMENTS:
+        return
+
+    compare_views_path = os.path.join(repo_root, "scripts", "lib", "compare_views.py")
+    env = os.environ.copy()
+    env.setdefault("MPLCONFIGDIR", os.path.join(output_dir, ".matplotlib-cache"))
+
+    cmd = [sys.executable, compare_views_path, experiment_name, "core", "interface"]
+    print(f"Info: auto-running compare-views for '{experiment_name}'.")
+    subprocess.run(cmd, check=True, env=env)
 
 
 def main() -> int:
@@ -848,10 +902,10 @@ def main() -> int:
     if not os.path.isdir(config_dir):
         print(f"Error: {config_dir} is not a directory.", file=sys.stderr)
         return 1
+    repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
     if args.output_dir:
         output_dir = os.path.abspath(args.output_dir)
     else:
-        repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
         default_name = os.path.basename(os.path.normpath(config_dir or working_dir))
         if not default_name:
             default_name = os.path.basename(os.path.normpath(working_dir)) or "plot-output"
@@ -1026,6 +1080,8 @@ def main() -> int:
         generate_plot(dfs_mem_ram, config, topology, plot_mem_ram_path,
                       "")
         print(f"Wrote ramulator latency plot to {plot_mem_ram_path}")
+
+    maybe_run_compare_views(repo_root, config_dir, output_dir)
     return 0
 
 
