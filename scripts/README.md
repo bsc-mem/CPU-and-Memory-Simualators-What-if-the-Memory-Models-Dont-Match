@@ -14,7 +14,7 @@ Primary one-shot entrypoint for first-time setup and rebuilds. It wraps dependen
 ```
 
 ### `setup-env.sh`
-Generates the `.zsim-env` file at the repository root. The three memory-simulator paths (`DRAMSIM3PATH`, `RAMULATORPATH`, `RAMULATOR2PATH`) are resolved automatically from the repo. `PINPATH` and `HDF5_HOME` are discovered from common system prefixes; if missing, the script attempts to download known-good bundles into `dependencies/`.
+Generates the `.zsim-env` file at the repository root. The four memory-simulator paths (`DRAMSIM3PATH`, `RAMULATORPATH`, `RAMULATOR2PATH`, `DRAMSYSPATH`) are resolved automatically from the repo. `PINPATH` and `HDF5_HOME` are discovered from common system prefixes; if missing, the script attempts to download known-good bundles into `dependencies/`.
 
 ```bash
 ./scripts/setup-env.sh
@@ -34,6 +34,7 @@ This script is intended for the Linux environment used in the paper artifact. In
 
 ### `compare-results.sh`
 Compares two experiment stages by analyzing their `processed/bandwidth_latency.csv` outputs side by side. Useful for quantifying the performance delta introduced by each interface correction.
+The summary reports mean, mean-absolute, and maximum-absolute deltas in both native units and percentages. Percentage deltas use the right-hand dataset as the per-row reference: `(A - B) / B * 100`.
 
 ```bash
 ./scripts/compare-results.sh <stage-a> <stage-b>

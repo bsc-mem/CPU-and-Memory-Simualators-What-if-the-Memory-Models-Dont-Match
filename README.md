@@ -1,8 +1,8 @@
 # CPU and Memory Simulators: What if the Memory Models Simply don’t Match?
 
-This repository is the artifact repository for a paper on CPU-memory simulator interface correctness.
+This is the artifact repository of **“CPU and Memory Simulators: What if the Memory Models Simply Don’t Match?”**
 
-This repository shares the final, corrected simulator source code, the benchmark source code, the committed processed results, and the scripts needed to rerun or compare those stages. It is designed to allow easy reproduction of the exact environment and results discussed in the paper.
+This repository provides the modified ZSim source code and the Ramulator, Ramulator 2, DRAMsim3, and DRAMSys integrations evaluated in the paper. It also includes benchmark source code, processed results, and scripts for reproducing and comparing the experiments.
 
 ## Paper Reference
 
@@ -20,6 +20,7 @@ Authors:
 - Petar Radojković — Barcelona Supercomputing Center
 
 ## Table of Contents
+
 - [Paper Reference](#paper-reference)
 - [1. Repository Architecture](#1-repository-architecture)
 - [2. Environment Setup](#2-environment-setup)
@@ -32,16 +33,16 @@ Authors:
 
 ## 1. Repository Architecture
 
-The repository is organized so that the source code is shared once, but is highly configurable via configuration files. This allows each experiment to independently activate or deactivate specific interface behaviors without duplicating the codebase. 
+The repository is organized so that the source code is shared once, but is highly configurable via configuration files. This allows each experiment to independently activate or deactivate specific interface behaviors without duplicating the codebase.
 
-| Directory | Purpose & Documentation |
-| :--- | :--- |
-| `simulator-source/` | **The Simulators.** Contains ZSim, DRAMsim3, Ramulator, and Ramulator2. These are the final, corrected versions with all changes built-in. <br>-> *See [`simulator-source/README.md`](simulator-source/README.md) for build instructions and environment setup.* |
-| `benchmarks/` | **The Workloads.** Contains the pointer-chasing and traffic-generation benchmarks used to generate bandwidth-latency curves. |
-| `experiments/` | **The Configurations & Results.** One folder per paper stage. Runnable stages include `sb.cfg`. Committed outputs, when present, live under `processed/` and `figures/`. <br>-> *See [`experiments/README.md`](experiments/README.md) for details on the execution flow and shared run entrypoints.* |
-| `scripts/` | **The Automation.** Repository-level helpers for environment setup, benchmark builds, result processing, and comparison. <br>-> *See [`scripts/README.md`](scripts/README.md) for the script catalog.* |
+| Directory           | Purpose & Documentation                                                                                                                                                                                                                                                                              |
+| :------------------ | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `simulator-source/` | **The Simulators.** Contains ZSim, DRAMsim3, Ramulator, Ramulator2, and DRAMSys. These are the final, corrected versions with all changes built-in. <br>-> _See [`simulator-source/README.md`](simulator-source/README.md) for build instructions and environment setup._                            |
+| `benchmarks/`       | **The Workloads.** Contains the pointer-chasing and traffic-generation benchmarks used to generate bandwidth-latency curves.                                                                                                                                                                         |
+| `experiments/`      | **The Configurations & Results.** One folder per paper stage. Runnable stages include `sb.cfg`. Committed outputs, when present, live under `processed/` and `figures/`. <br>-> _See [`experiments/README.md`](experiments/README.md) for details on the execution flow and shared run entrypoints._ |
+| `scripts/`          | **The Automation.** Repository-level helpers for environment setup, benchmark builds, result processing, and comparison. <br>-> _See [`scripts/README.md`](scripts/README.md) for the script catalog._                                                                                               |
 
-The processed figures and configuration files are kept in Git. The raw simulator traces are released separately and are listed in the [raw-results table](#51-raw-results).
+The processed figures and configuration files are kept in Git. Most raw simulator traces are released separately and are listed in the [raw-results table](#51-raw-results); experiment 00's raw results are committed directly under `experiments/00-damov-native/test-raw/`.
 
 ---
 
@@ -54,9 +55,10 @@ Run the single entry-point script from the repository root on a **Linux** machin
 ```
 
 This handles everything in sequence:
+
 1. **Checks system dependencies** — GCC, cmake, scons, libconfig++, Python 3 with pandas/matplotlib
 2. **Generates `.zsim-env`** — auto-resolves in-repo paths and tries to locate Pin/HDF5; if either dependency is missing, configure the dependency URLs in `scripts/setup-env.sh` or install it manually
-3. **Builds memory simulators** — compiles `libramulator.so`, `libdramsim3.so`, `libramulator2.so`
+3. **Builds memory simulators** — compiles Ramulator, DRAMsim3, Ramulator2, and DRAMSys libraries
 4. **Builds ZSim** — release binary at `simulator-source/zsim-bsc/build/release/zsim`
 5. **Builds benchmarks** — `ptr_chase` and `traffic_gen` under `benchmarks/`
 
@@ -66,11 +68,11 @@ To force a clean rebuild after pulling changes:
 ./setup.sh --rebuild
 ```
 
-> **System requirements:** Linux, GCC, cmake, scons, libconfig++, Python 3 with pandas and matplotlib, plus network access if Pin/HDF5 must be auto-downloaded. `ptr_chase` requires `linux/perf_event.h`.
+> **System requirements:** Linux, a C++17 compiler, CMake 3.25 or newer, scons, libconfig++, Python 3 with pandas and matplotlib, plus network access for DRAMSys dependencies. `ptr_chase` requires `linux/perf_event.h`.
 >
 > **Pin on modern kernels:** Pin 2.14 may refuse to start on Linux 4.0+ kernels. Pass `-injection child` to work around the version check. See [`simulator-source/README.md`](simulator-source/README.md) for details.
 
--> *For manual dependency/build steps see [`simulator-source/README.md`](simulator-source/README.md). For script-by-script setup details see [`scripts/README.md`](scripts/README.md).*
+-> _For manual dependency/build steps see [`simulator-source/README.md`](simulator-source/README.md). For script-by-script setup details see [`scripts/README.md`](scripts/README.md)._
 
 ---
 
@@ -78,25 +80,27 @@ To force a clean rebuild after pulling changes:
 
 The paper evaluates the impact of interface details through a sequence of cumulative refinements. Each stage represents a specific correction or enhancement to the simulator coupling:
 
-### 3.1. Interface Refinement Stages
-| Stage | Description / Focus | Figure |
-| :--- | :--- | :--- |
-| [`00-damov-native`](experiments/00-damov-native/) | Native baseline reference stage (not part of the generic `runner.sh` pipeline) | N/A |
-| [`01-baseline`](experiments/01-baseline/) | Base simulator coupling | Figure 2 |
-| [`02-memory-model`](experiments/02-memory-model/) | Follow-up interface configuration | Figure 6 |
-| [`03-clock-scaling`](experiments/03-clock-scaling/) | Follow-up frequency-divider configuration | Figure 7 |
-| [`04-correct-freq`](experiments/04-correct-freq/) | Corrected-frequency configuration | Figure 8 |
-| [`05-address-mapping`](experiments/05-address-mapping/) | Physical address mapping accuracy | Figure 9a |
-| [`06-noc`](experiments/06-noc/) | Realistic Network-on-Chip refinement | Figure 9b |
-| [`07-prefetcher`](experiments/07-prefetcher/) | Final Ramulator stage with prefetcher | Figure 9c |
+### 3.1. Interface Refinement Steps
+
+| Step                                                    | Description / Focus                                                            | Figure               |
+| :------------------------------------------------------ | :----------------------------------------------------------------------------- | :------------------- |
+| [`00-damov-native`](experiments/00-damov-native/)       | Native baseline reference stage (not part of the generic `runner.sh` pipeline) | N/A                  |
+| [`01-baseline`](experiments/01-baseline/)               | Base simulator coupling                                                        | Figure 2b, 2c and 2d |
+| [`02-memory-model`](experiments/02-memory-model/)       | Follow-up interface configuration                                              | Figure 6             |
+| [`03-clock-scaling`](experiments/03-clock-scaling/)     | Follow-up frequency-divider configuration                                      | Figure 7             |
+| [`04-correct-freq`](experiments/04-correct-freq/)       | Corrected-frequency configuration                                              | Figure 8             |
+| [`05-address-mapping`](experiments/05-address-mapping/) | Physical address mapping accuracy                                              | Figure 10a           |
+| [`06-noc`](experiments/06-noc/)                         | Realistic Network-on-Chip refinement                                           | Figure 10b           |
+| [`07-prefetcher`](experiments/07-prefetcher/)           | Final Ramulator stage with prefetcher                                          | Figure 10c           |
+| [`11-mem-intensive`](experiments/11-mem-intensive/)     | Pointer-chase and STREAM results corresponding to each modification            | Figure 9             |
 
 ### 3.2. Portability Evaluation
-| Stage | Description / Focus | Figure |
-| :--- | :--- | :--- |
-| [`08-portability-ramulator2`](experiments/08-portability-ramulator2/) | Evaluation using Ramulator2 | Figure 10b |
-| [`09-portability-dramsim3`](experiments/09-portability-dramsim3/) | Evaluation using DRAMsim3 | Figure 10c |
-| [`10-portability-dramsys`](experiments/10-portability-dramsys/) | Evaluation using DRAMSys | Figure 10d |
-| [`11-mem-intensive`](experiments/11-mem-intensive/) | Reserved memory-intensive follow-up stage | Extension |
+
+| Step                                                                  | Description / Focus         | Figure     |
+| :-------------------------------------------------------------------- | :-------------------------- | :--------- |
+| [`08-portability-ramulator2`](experiments/08-portability-ramulator2/) | Evaluation using Ramulator2 | Figure 11b |
+| [`09-portability-dramsim3`](experiments/09-portability-dramsim3/)     | Evaluation using DRAMsim3   | Figure 11c |
+| [`10-portability-dramsys`](experiments/10-portability-dramsys/)       | Evaluation using DRAMSys    | Figure 11d |
 
 ### 3.3. Running and Plotting
 
@@ -117,7 +121,7 @@ source .zsim-env
 
 `runner.sh` clears prior `test-raw/measurment_*` directories for the selected stage before creating a fresh run.
 
-For `08-portability-ramulator2`, use a ZSim build configured for Ramulator2-only linkage (unset `RAMULATORPATH` and rebuild ZSim). `runner.sh` checks this and warns interactively if the environment is mixed.
+For `08-portability-ramulator2`, use a ZSim build configured for Ramulator2-only linkage: source `.zsim-env`, unset `RAMULATORPATH`, and clean-rebuild ZSim. Ramulator and Ramulator2 cannot be active in the same ZSim binary; the default build selects Ramulator. `runner.sh` inspects the built library and exits with explicit rebuild instructions unless it is linked to Ramulator2.
 
 The committed paper figures are under `experiments/<stage>/figures/` and are not touched by the commands above. To overwrite them intentionally:
 
@@ -127,53 +131,49 @@ The committed paper figures are under `experiments/<stage>/figures/` and are not
   --output-dir experiments/01-baseline
 ```
 
--> *For the full execution model see [`experiments/README.md`](experiments/README.md).*
+-> _For the full execution model see [`experiments/README.md`](experiments/README.md)._
 
 ---
 
 ## 4. Result Comparison
 
-A key contribution of the paper is analyzing the delta between interface correctness stages. 
+A key contribution of the paper is analyzing the delta between interface correctness stages.
 
 To compare the output of two different stages (e.g., comparing the baseline against the corrected model), use the `compare-results.sh` script:
 
 ```bash
 ./scripts/compare-results.sh 01-baseline 04-correct-freq
 ```
+
 It can also compare two explicit CSV files (for example from `test-output/.../processed/bandwidth_latency.csv`).
 
 ---
 
 ## 5. Raw Data Policy
 
-The repository contains the configurations, scripts, processed CSV files, and figures needed to inspect each stage. Raw simulator output is distributed as a separate archive for each stage so that the large trace files do not have to be stored in Git. The links below are placeholders for the new artifact release and will be filled in after each experiment has been checked.
+The repository contains the configurations, scripts, processed CSV files, and figures needed to inspect each stage. Except for experiment 00, raw simulator output is distributed as a separate archive for each stage so that the large trace files do not have to be stored in Git.
 
 ### 5.1. Raw Results
 
-| Stage | Raw results | Archive URL | MD5SUM |
-| :--- | :--- | :--- | :--- |
-| `00-damov-native` | Pending new release | `[NEW-ZENODO-00-DAMOV-RAW]` | `NEW-MD5SUM-00-DAMOV` |
-| `01-baseline` | Pending new release | `[NEW-ZENODO-01-BASELINE-RAW]` | `NEW-MD5SUM-01-BASELINE` |
-| `02-memory-model` | Pending new release | `[NEW-ZENODO-02-MEMORY-MODEL-RAW]` | `NEW-MD5SUM-02-MEMORY-MODEL` |
-| `03-clock-scaling` | Pending new release | `[NEW-ZENODO-03-CLOCK-SCALING-RAW]` | `NEW-MD5SUM-03-CLOCK-SCALING` |
-| `04-correct-freq` | Pending new release | `[NEW-ZENODO-04-CORRECT-FREQ-RAW]` | `NEW-MD5SUM-04-CORRECT-FREQ` |
-| `05-address-mapping` | Pending new release | `[NEW-ZENODO-05-ADDRESS-MAPPING-RAW]` | `NEW-MD5SUM-05-ADDRESS-MAPPING` |
-| `06-noc` | Pending new release | `[NEW-ZENODO-06-NOC-RAW]` | `NEW-MD5SUM-06-NOC` |
-| `07-prefetcher` | Pending new release | `[NEW-ZENODO-07-PREFETCHER-RAW]` | `NEW-MD5SUM-07-PREFETCHER` |
-| `08-portability-ramulator2` | Pending new release | `[NEW-ZENODO-08-RAMULATOR2-RAW]` | `NEW-MD5SUM-08-RAMULATOR2` |
-| `09-portability-dramsim3` | Pending new release | `[NEW-ZENODO-09-DRAMSIM3-RAW]` | `NEW-MD5SUM-09-DRAMSIM3` |
-| `10-portability-dramsys` | Pending new release | `[NEW-ZENODO-10-DRAMSYS-RAW]` | `NEW-MD5SUM-10-DRAMSYS` |
-| `11-mem-intensive` | Reserved | `N/A` | `N/A` |
-
-Replace the bracketed archive placeholder with the corresponding raw-results URL and add the checksum published with that archive. The previous artifact release is not linked here.
+| Step                        | Raw-data location                                                                       | MD5SUM                             |
+| :-------------------------- | :-------------------------------------------------------------------------------------- | :--------------------------------- |
+| `00-damov-native`           | [`experiments/00-damov-native/test-raw/`](experiments/00-damov-native/test-raw/)        | `N/A`                              |
+| `01-baseline`               | [Download](https://zenodo.org/records/21760832/files/01-baseline.tar?download=1)        | `bf559ef6fd77f2718e5257991d73b41d` |
+| `02-memory-model`           | [Download](https://zenodo.org/records/21760832/files/02-memory-model.zip?download=1)    | `88429850cb804319a6528e0c0735d7fa` |
+| `03-clock-scaling`          | [Download](https://zenodo.org/records/21760832/files/03-clock-scaling.zip?download=1)   | `4ce964d0cb5bbb82a378e3939dac1260` |
+| `04-correct-freq`           | [Download](https://zenodo.org/records/21760832/files/04-correct-freq.zip?download=1)    | `275fea55aeaca6edf0ca918d2a19eaac` |
+| `05-address-mapping`        | [Download](https://zenodo.org/records/21760832/files/05-address-mapping.zip?download=1) | `74bb3d8d63cf43ddd06929b9dc27a7f9` |
+| `06-noc`                    | [Download](https://zenodo.org/records/21760832/files/06-noc.zip?download=1)             | `5a6fdeb0af978f8eaf4f355e46453a54` |
+| `07-prefetcher`             | [Download](https://zenodo.org/records/21760832/files/07-prefetcher.zip?download=1)      | `1e4fd36b3c25af7603f2e817c2448980` |
+| `08-portability-ramulator2` | [Download](https://zenodo.org/records/21760832/files/08-ramulator2.zip?download=1)      | `60cb5aac4b34df03c297bdfa7ef85cec` |
+| `09-portability-dramsim3`   | [Download](https://zenodo.org/records/21760832/files/09-dramsim3.zip?download=1)        | `87406cce9943ea51eb6a98ebc8a350f1` |
+| `10-portability-dramsys`    | [Download](https://zenodo.org/records/21760832/files/10-dramsys.zip?download=1)         | `cc52eb538c221228e72004a9581f4388` |
+| `11-mem-intensive`          | `N/A`                                                                                   | `N/A`                              |
 
 ### 5.2. Regenerating Results
 
-Raw data can also be regenerated from the repository root:
-
-Figure 9a is one special case worth calling out. The original experiment drop implemented the address-mapping change through a source-only Ramulator toggle. In this artifact, that behavior is exposed through `simulator-source/ramulator/ramulator-configs/DDR4-config-MN4-skylake.cfg`, so the address-mapping stage can be reproduced through configuration rather than by editing source comments by hand.
-
 Raw data for any runnable stage can be regenerated from the repository root:
+
 ```bash
 source .zsim-env
 ./experiments/runner.sh 01-baseline

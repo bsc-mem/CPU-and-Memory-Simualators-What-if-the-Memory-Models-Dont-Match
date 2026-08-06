@@ -73,6 +73,8 @@ If HDF5 headers/libs are available system-wide, `HDF5_HOME` may be left empty. `
 
 - **GCC 11.4.0** was used for the paper artifact runs
 - The build system uses `scons`
+- DRAMSys requires C++17 and CMake 3.25 or newer
+- DRAMSys downloads SystemC, DRAMPower, DRAMUtils, SQLite, and nlohmann/json during its first build
 
 ### 2.4. Memory Simulator Paths
 
@@ -82,6 +84,7 @@ The memory simulator source trees in this directory also require environment var
 DRAMSIM3PATH=<path to dramsim3/DRAMsim3>
 RAMULATORPATH=<path to ramulator>
 RAMULATOR2PATH=<path to ramulator2>
+DRAMSYSPATH=<path to DRAMSys>
 ```
 
 ### 2.5. Python (Post-processing)

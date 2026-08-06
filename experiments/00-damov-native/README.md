@@ -17,14 +17,9 @@ This stage is not currently tied to a main paper figure. It is kept as a system-
 
 The DAMOV simulator logic is intentionally kept unchanged for this artifact. The local updates are limited to build and portability plumbing: the SCons scripts were updated to run with Python 3, syscall handling was refreshed for newer Ubuntu releases, and DAMOV now reuses the root project dependencies resolved by `setup.sh` (`PINPATH` and `RAMULATORPATH`) instead of duplicating Pin and Ramulator source trees under `damov-src`.
 
-## Status
-
-- public structure: populated
-- committed processed paper outputs: not yet added
 ## Raw Results
 
 | Item | Value |
 | :--- | :--- |
-| Raw archive | `[NEW-ZENODO-00-DAMOV-RAW]` |
-| MD5SUM | `NEW-MD5SUM-00-DAMOV` |
-| Status | `PENDING_NEW_RELEASE` |
+| Raw data | [`test-raw/`](test-raw/) |
+| MD5SUM | `N/A` |

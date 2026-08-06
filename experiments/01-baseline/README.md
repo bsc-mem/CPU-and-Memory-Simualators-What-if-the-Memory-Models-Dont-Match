@@ -4,7 +4,7 @@ This experiment captures the baseline ZSim plus original Ramulator interface con
 
 ## Paper Figure
 
-This stage corresponds to Figure 2 in the paper.
+This stage corresponds to Figures 2b, 2c, and 2d in the paper.
 
 ## Public Contents
 

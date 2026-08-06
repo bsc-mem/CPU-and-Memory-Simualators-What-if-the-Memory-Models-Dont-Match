@@ -4,7 +4,7 @@ This stage mirrors experiment 09's setup (same platform and sweep) while swappin
 
 ## Paper Figure
 
-This stage corresponds to Figure 10d in the paper.
+This stage corresponds to Figure 11d in the paper.
 
 ## Intent
 
