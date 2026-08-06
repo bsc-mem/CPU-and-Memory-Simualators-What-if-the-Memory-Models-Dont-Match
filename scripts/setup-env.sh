@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # setup-env.sh — generate .zsim-env at the repository root.
 #
-# The three memory-simulator paths are always inside this repo, so they are
+# The four memory-simulator paths are always inside this repo, so they are
 # resolved automatically.  PINPATH and HDF5_HOME are located by searching
 # common system paths; if not found they are downloaded automatically.
 #
@@ -79,7 +79,7 @@ download_and_extract() {
             echo -e "  ${RED}✘${NC}  Actual:   $actual_sha256" >&2
             exit 1
         fi
-        ok "$label SHA256 verified"
+        ok "$label SHA256 verified" >&2
     fi
 
     echo "    Extracting $label..." >&2
@@ -112,8 +112,7 @@ sys.exit(0 if zipfile.is_zipfile(sys.argv[1]) else 1)
     fi
     rm -f "$archive"
 
-    # Print the first directory that appeared — only this goes to stdout
-    find "$dest_dir" -mindepth 1 -maxdepth 1 -type d | sort | head -1
+    find "$dest_dir" -mindepth 1 -maxdepth 1 -type d -name "${label}*" | sort | head -1
 }
 
 # ── 1. Memory simulator paths (always inside the repo) ───────────────────────
@@ -121,8 +120,9 @@ sys.exit(0 if zipfile.is_zipfile(sys.argv[1]) else 1)
 DRAMSIM3PATH="$REPO_ROOT/simulator-source/dramsim3/DRAMsim3"
 RAMULATORPATH="$REPO_ROOT/simulator-source/ramulator"
 RAMULATOR2PATH="$REPO_ROOT/simulator-source/ramulator2"
+DRAMSYSPATH="$REPO_ROOT/simulator-source/DRAMSys"
 
-for var_name in DRAMSIM3PATH RAMULATORPATH RAMULATOR2PATH; do
+for var_name in DRAMSIM3PATH RAMULATORPATH RAMULATOR2PATH DRAMSYSPATH; do
     path="${!var_name}"
     if [[ -d "$path" ]]; then
         ok "$var_name = $path"
@@ -176,7 +176,7 @@ else
     warn "Pin 2.14 not found on system — downloading automatically..."
     DEPS_DIR="$REPO_ROOT/dependencies"
     PINPATH=$(download_and_extract "$PIN_DOWNLOAD_URL" "$DEPS_DIR" "pin" "$PIN_SHA256")
-    if [[ -z "$PINPATH" || ! -d "$PINPATH" ]]; then
+    if [[ -z "$PINPATH" ]] || ! is_pin_root "$PINPATH"; then
         echo -e "  ${RED}✘${NC}  Pin download or extraction failed." >&2
         echo -e "  ${RED}✘${NC}  Download manually from: $PIN_DOWNLOAD_URL" >&2
         echo -e "  ${RED}✘${NC}  Extract it and set PINPATH in .zsim-env manually." >&2
@@ -238,7 +238,7 @@ if [[ -z "$HDF5_HOME" ]]; then
     warn "HDF5 not found on system — downloading automatically..."
     DEPS_DIR="$REPO_ROOT/dependencies"
     HDF5_HOME=$(download_and_extract "$HDF5_DOWNLOAD_URL" "$DEPS_DIR" "hdf5" "$HDF5_SHA256")
-    if [[ -z "$HDF5_HOME" || ! -d "$HDF5_HOME" ]]; then
+    if [[ -z "$HDF5_HOME" ]] || ! is_hdf5_root "$HDF5_HOME"; then
         echo -e "  ${RED}✘${NC}  HDF5 download or extraction failed." >&2
         echo -e "  ${RED}✘${NC}  Download manually from: $HDF5_DOWNLOAD_URL" >&2
         echo -e "  ${RED}✘${NC}  Extract it and set HDF5_HOME in .zsim-env manually." >&2
@@ -261,6 +261,7 @@ export HDF5_HOME="$HDF5_HOME"
 export DRAMSIM3PATH="$DRAMSIM3PATH"
 export RAMULATORPATH="$RAMULATORPATH"
 export RAMULATOR2PATH="$RAMULATOR2PATH"
+export DRAMSYSPATH="$DRAMSYSPATH"
 EOF
 
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"

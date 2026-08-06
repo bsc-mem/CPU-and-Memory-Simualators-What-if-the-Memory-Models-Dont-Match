@@ -11,7 +11,7 @@
 # What it does:
 #   1. Checks system dependencies (GCC, scons, Python packages, libconfig++)
 #   2. Generates .zsim-env (resolves all paths automatically, prompts only for Pin)
-#   3. Builds memory simulators (Ramulator, DRAMsim3, Ramulator2, optional DRAMSys)
+#   3. Builds memory simulators (Ramulator, DRAMsim3, Ramulator2, DRAMSys)
 #   4. Builds ZSim (release build)
 #   5. Builds the benchmarks (ptr_chase and traffic_gen)
 
@@ -77,7 +77,7 @@ else
     err "unzip not found. Install it: sudo apt install unzip"
 fi
 
-# cmake (needed for DRAMsim3 and Ramulator2)
+# cmake (needed for DRAMsim3, Ramulator2, and DRAMSys)
 if command -v cmake &>/dev/null; then
     ok "cmake: $(cmake --version | head -1)"
 else
@@ -85,6 +85,11 @@ else
 fi
 
 cmake_major="$(cmake --version | awk 'NR==1 {split($3, v, "."); print v[1]}')"
+cmake_minor="$(cmake --version | awk 'NR==1 {split($3, v, "."); print v[2]}')"
+if [[ ! "$cmake_major" =~ ^[0-9]+$ || ! "$cmake_minor" =~ ^[0-9]+$ ]] || \
+   (( cmake_major < 3 || (cmake_major == 3 && cmake_minor < 25) )); then
+    err "DRAMSys requires CMake 3.25 or newer. Found: $(cmake --version | head -1)"
+fi
 CMAKE_COMPAT_ARGS=()
 # CMake 4 removed compatibility with projects that still declare <3.5.
 if [[ "$cmake_major" =~ ^[0-9]+$ ]] && (( cmake_major >= 4 )); then
@@ -179,15 +184,16 @@ else
     [[ -f "$RAMULATOR2_LIB" ]] && ok "libramulator2.so built" || err "Ramulator2 build failed. Expected: $RAMULATOR2_LIB"
 fi
 
-# DRAMSys — optional cmake build (static libs in $DRAMSYSPATH/build/lib/)
+# DRAMSys — cmake build (static libs in $DRAMSYSPATH/build/lib/)
 if [[ -n "${DRAMSYSPATH:-}" ]]; then
     DRAMSYS_LIB_DIR="$DRAMSYSPATH/build/lib"
     DRAMSYS_LIB="$DRAMSYS_LIB_DIR/libdramsys.a"
     DRAMPOWER_LIB="$DRAMSYS_LIB_DIR/libDRAMPower.a"
     SYSTEMC_LIB="$DRAMSYS_LIB_DIR/libsystemc.a"
+    SQLITE_LIB="$DRAMSYS_LIB_DIR/libsqlite3.a"
 
-    if [[ -f "$DRAMSYS_LIB" && -f "$DRAMPOWER_LIB" && -f "$SYSTEMC_LIB" ]] && [[ "$REBUILD" == false ]]; then
-        ok "DRAMSys libs and TraceAnalyzer already built"
+    if [[ -f "$DRAMSYS_LIB" && -f "$DRAMPOWER_LIB" && -f "$SYSTEMC_LIB" && -f "$SQLITE_LIB" ]] && [[ "$REBUILD" == false ]]; then
+        ok "DRAMSys libraries already built"
     else
         echo "  Building DRAMSys from: $DRAMSYSPATH"
         [[ "$REBUILD" == true ]] && rm -rf "$DRAMSYSPATH/build" || true
@@ -202,14 +208,14 @@ if [[ -n "${DRAMSYSPATH:-}" ]]; then
         cmake -S "$DRAMSYSPATH" -B "$DRAMSYSPATH/build" \
             "${DRAMSYS_CMAKE_ARGS[@]}"
         cmake --build "$DRAMSYSPATH/build" -j"$(nproc)"
-        if [[ -f "$DRAMSYS_LIB" && -f "$DRAMPOWER_LIB" && -f "$SYSTEMC_LIB" ]]; then
-            ok "DRAMSys libs built (libdramsys.a, libDRAMPower.a, libsystemc.a)"
+        if [[ -f "$DRAMSYS_LIB" && -f "$DRAMPOWER_LIB" && -f "$SYSTEMC_LIB" && -f "$SQLITE_LIB" ]]; then
+            ok "DRAMSys libs built (libdramsys.a, libDRAMPower.a, libsystemc.a, libsqlite3.a)"
         else
             err "DRAMSys build failed. Expected libs under: $DRAMSYS_LIB_DIR"
         fi
     fi
 else
-    warn "DRAMSYSPATH is not set; skipping optional DRAMSys check/build."
+    err "DRAMSYSPATH is not set; cannot build the required DRAMSys backend."
 fi
 
 # ── 3. Build ZSim ─────────────────────────────────────────────────────────────

@@ -60,10 +60,10 @@ def configure_optional_libs(env):
         "RAMULATOR2PATH": ("ramulator2", "-D_WITH_RAMULATOR2_=1"),
         "DRAMSYSPATH": ("dramsys", "-D_WITH_DRAMSYS_=1")
     }
-    # RAMULATOR and RAMULATOR2 cannot both be defined as active at compile time.
-    # When both paths are set, suppress RAMULATOR2's compile-time flag so the
-    # build succeeds; the per-experiment sb.cfg selects which backend is active
-    # at runtime, and both libraries are still linked for portability stages.
+    # RAMULATOR and RAMULATOR2 cannot both be active at compile time. The
+    # generated default environment contains both source paths, so prioritize
+    # RAMULATOR and exclude RAMULATOR2 from that ZSim build. Experiment 08 must
+    # unset RAMULATORPATH and clean-rebuild ZSim to select RAMULATOR2 instead.
     ram1_set = bool(os.environ.get("RAMULATORPATH"))
     ram2_set = bool(os.environ.get("RAMULATOR2PATH"))
     suppress_ram2_define = ram1_set and ram2_set
@@ -111,7 +111,7 @@ def configure_optional_libs(env):
         env.Append(PINLIBPATH=lib_paths)
 
         if var == "RAMULATOR2PATH" and suppress_ram2_define:
-            continue  # include/link ramulator2 but don't define _WITH_RAMULATOR2_=1
+            continue  # Default policy: do not define or link RAMULATOR2.
 
         rpath_dirs = [path]
         if var == "RAMULATORPATH":

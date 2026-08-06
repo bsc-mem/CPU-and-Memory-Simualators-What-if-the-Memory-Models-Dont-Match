@@ -79,6 +79,7 @@ CONFIG_PATH="$(resolve_config_path "$EXPERIMENT_DIR")"
 CONFIG_NAME="$(basename "$CONFIG_PATH")"
 RUN_ONE_SCRIPT="$SCRIPT_DIR/run-one.sh"
 TRAFFIC_GEN_BIN="$BENCH_ROOT/traffic_gen/traffic_gen.x"
+ZSIM_LIB="$REPO_ROOT/simulator-source/zsim-bsc/build/release/libzsim.so"
 
 RWRATIO_MIN=0
 RWRATIO_MAX=100
@@ -93,25 +94,31 @@ for required in "$CONFIG_PATH" "$RUN_ONE_SCRIPT" "$BENCH_ROOT/ptr_chase/ptr_chas
   fi
 done
 
-# ── Check for Ramulator2 build requirement ───────────────────────────────────────
+# ── Enforce the Ramulator2-only build requirement ───────────────────────────────
 if [[ "$(basename "$EXPERIMENT_DIR")" == "08-portability-ramulator2" ]]; then
-  if [[ -n "${RAMULATORPATH:-}" ]]; then
-    echo "⚠  WARNING: RAMULATORPATH is set, but 08-portability-ramulator2 requires ZSim"
-    echo "   to be built with RAMULATOR2 only (not both RAMULATOR and RAMULATOR2)."
-    echo
-    echo "   To fix this:"
-    echo "   1. Unset RAMULATORPATH: unset RAMULATORPATH"
-    echo "   2. Keep RAMULATOR2PATH set"
-    echo "   3. Rebuild ZSim: cd simulator-source/zsim-bsc && scons -c && scons --r -j\$(nproc)"
-    echo
-    echo "   Or run: source .zsim-env && unset RAMULATORPATH && cd simulator-source/zsim-bsc && scons -c && scons --r -j\$(nproc)"
-    echo
-    read -p "   Continue anyway? (y/N) " -n 1 -r
-    echo
-    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-      echo "Aborted."
-      exit 1
-    fi
+  if [[ ! -f "$ZSIM_LIB" ]] || ! grep -aFq 'libramulator2.so' "$ZSIM_LIB"; then
+    cat >&2 <<'EOF'
+ERROR: 08-portability-ramulator2 requires a Ramulator2-only ZSim build.
+The default build enables Ramulator, because Ramulator and Ramulator2 cannot
+be active in the same ZSim binary.
+
+Build ZSim for experiment 08 with:
+  source .zsim-env
+  unset RAMULATORPATH
+  cd simulator-source/zsim-bsc
+  scons -c
+  scons --r -j$(nproc)
+
+Then, from the repository root (in the same shell), run:
+  ./experiments/runner.sh 08-portability-ramulator2
+
+To restore the default Ramulator build afterward:
+  source .zsim-env
+  cd simulator-source/zsim-bsc
+  scons -c
+  scons --r -j$(nproc)
+EOF
+    exit 2
   fi
 fi
 
