@@ -70,6 +70,29 @@ def load_rows(path: Path) -> list[dict[str, str]]:
         return list(csv.DictReader(fh))
 
 
+def resolve_output_path(
+    source_arg: str,
+    csv_path: Path,
+    repo_root: Path,
+    lhs_view: str,
+    rhs_view: str,
+) -> Path:
+    filename = f"bandwidth_latency_{lhs_view}_vs_{rhs_view}.png"
+
+    if not Path(source_arg).is_file():
+        return repo_root / "experiments" / source_arg / "figures" / filename
+
+    csv_parts = csv_path.resolve().parts
+    repo_parts = repo_root.resolve().parts
+    exp_prefix = repo_parts + ("experiments",)
+    if csv_parts[: len(exp_prefix)] == exp_prefix and len(csv_parts) >= len(exp_prefix) + 2:
+        experiment_dir = Path(*csv_parts[: len(exp_prefix) + 1])
+        return experiment_dir / "figures" / filename
+
+    experiment_name = csv_path.parent.parent.name
+    return repo_root / "test-output" / "compare-views" / f"{experiment_name}_{lhs_view}_vs_{rhs_view}.png"
+
+
 def normalize_view(name: str) -> str:
     lowered = name.strip().lower()
     for canonical, spec in VIEW_SPECS.items():
@@ -396,7 +419,7 @@ def main() -> int:
 
     print_summary(csv_path, experiment_name, lhs_view, rhs_view, lhs_points, rhs_points)
 
-    output_path = repo_root / "test-output" / "compare-views" / f"{experiment_name}_{lhs_view}_vs_{rhs_view}.png"
+    output_path = resolve_output_path(source_arg, csv_path, repo_root, lhs_view, rhs_view)
     make_plot(rows, experiment_name, lhs_view, rhs_view, output_path)
 
     return 0
