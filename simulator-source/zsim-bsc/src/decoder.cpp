@@ -927,7 +927,7 @@ bool Decoder::decodeInstr(INS ins, DynUopVec& uops) {
                         break;
                     default:
 			inaccurate = true;
-			printf("Innacurate: instruction %d, category: %d\n", opcode, category);
+			// printf("Innacurate: instruction %d, category: %d\n", opcode, category);
                 	// panic("Invalid opcode for this class");
                 }
                 emitBasicOp(instr, uops, opLat, PORTS_015);
@@ -982,7 +982,7 @@ bool Decoder::decodeInstr(INS ins, DynUopVec& uops) {
                 default:
                     inaccurate = true;
                     //David, inaccurate
-                    printf("Innacurate: instruction %d, category: %d\n", opcode, category);
+                    // printf("Innacurate: instruction %d, category: %d\n", opcode, category);
 		  //emitBasicOp(instr, uops, 1, PORTS_015);
 		  INACCUOP
             }
@@ -1113,7 +1113,7 @@ bool Decoder::decodeInstr(INS ins, DynUopVec& uops) {
 				default:
                     inaccurate = true;
                     //David, inaccurate
-                    printf("Innacurate: instruction %d, category: %d\n", opcode, category);
+                    // printf("Innacurate: instruction %d, category: %d\n", opcode, category);
 						  //emitBasicOp(instr, uops, 1, PORT_0 | PORT_1|PORT_5);
 						 INACCUOP
 			}
@@ -1636,7 +1636,7 @@ bool Decoder::decodeInstr(INS ins, DynUopVec& uops) {
                     default:
                         inaccurate = true;
                         //David, inaccurate
-                        printf("Innacurate: instruction %d, category: %d\n", opcode, category);
+                        // printf("Innacurate: instruction %d, category: %d\n", opcode, category);
 							   INACCUOP
                 }
                 if (simple) emitBasicOp(instr, uops, lat, ports, extraSlots);
@@ -1720,7 +1720,7 @@ bool Decoder::decodeInstr(INS ins, DynUopVec& uops) {
                 default: // AVX converts
                     inaccurate = true;
                     //David, inaccurate
-                    printf("Innacurate: instruction %d, category: %d\n", opcode, category);
+                    // printf("Innacurate: instruction %d, category: %d\n", opcode, category);
 						  //emitBasicOp(instr, uops, 1, PORT_0|PORT_1|PORT_5);
 						 INACCUOP
             }
@@ -1755,7 +1755,7 @@ bool Decoder::decodeInstr(INS ins, DynUopVec& uops) {
                 default:
                     inaccurate = true;
 					//David, inaccurate
-                    printf("Innacurate: instruction %d, category: %d\n", opcode, category);
+                    // printf("Innacurate: instruction %d, category: %d\n", opcode, category);
             }
             break;
 
@@ -1818,7 +1818,7 @@ bool Decoder::decodeInstr(INS ins, DynUopVec& uops) {
                 default:
                     inaccurate = true;
                     //David, inaccurate
-                    printf("Innacurate: instruction %d, category: %d\n", opcode, category);
+                    // printf("Innacurate: instruction %d, category: %d\n", opcode, category);
 						  emitBasicOp(instr, uops, 1, PORTS_015);
 						  //INACCUOP//
             }

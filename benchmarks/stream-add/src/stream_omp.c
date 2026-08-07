@@ -416,6 +416,7 @@ main()
 	    }
 	}
     
+#if 0  /* ZSim supplies the experiment measurements; suppress STREAM's report. */
     printf("Function    Best Rate MB/s  Avg time     Min time     Max time\n");
     for (j=0; j<4; j++) {
 		avgtime[j] = avgtime[j]/(double)(NTIMES-1);
@@ -431,6 +432,7 @@ main()
     /* --- Check Results --- */
     checkSTREAMresults();
     printf(HLINE);
+#endif
 
     return 0;
 }
