@@ -12,7 +12,7 @@
 #   1. Checks system dependencies (GCC, scons, Python packages, libconfig++)
 #   2. Generates .zsim-env (resolves all paths automatically, prompts only for Pin)
 #   3. Builds memory simulators (Ramulator, DRAMsim3, Ramulator2, DRAMSys)
-#   4. Builds ZSim (release build)
+#   4. Builds persistent ZSim release variants for Ramulator and Ramulator2
 #   5. Builds the benchmarks (ptr_chase and traffic_gen)
 
 set -euo pipefail
@@ -61,6 +61,13 @@ if command -v gcc &>/dev/null; then
     ok "GCC: $(gcc --version | head -1)"
 else
     err "GCC not found. Install GCC 11: sudo apt install gcc g++"
+fi
+
+# readelf (used to validate that each ZSim variant links exactly one Ramulator)
+if command -v readelf &>/dev/null; then
+    ok "readelf: found"
+else
+    err "readelf not found. Install binutils: sudo apt install binutils"
 fi
 
 # scons
@@ -219,26 +226,83 @@ else
 fi
 
 # ── 3. Build ZSim ─────────────────────────────────────────────────────────────
-step "Step 4 / 5 — Building ZSim (release)"
+step "Step 4 / 5 — Building ZSim variants (release)"
 
 ZSIM_DIR="$REPO_ROOT/simulator-source/zsim-bsc"
-ZSIM_BIN="$ZSIM_DIR/build/release/zsim"
+ZSIM_RAMULATOR_BUILD_ROOT="build"
+ZSIM_RAMULATOR2_BUILD_ROOT="build/ramulator2"
+ZSIM_RAMULATOR_BIN="$ZSIM_DIR/$ZSIM_RAMULATOR_BUILD_ROOT/release/zsim"
+ZSIM_RAMULATOR_LIB="$ZSIM_DIR/$ZSIM_RAMULATOR_BUILD_ROOT/release/libzsim.so"
+ZSIM_RAMULATOR2_BIN="$ZSIM_DIR/$ZSIM_RAMULATOR2_BUILD_ROOT/release/zsim"
+ZSIM_RAMULATOR2_LIB="$ZSIM_DIR/$ZSIM_RAMULATOR2_BUILD_ROOT/release/libzsim.so"
 
-if [[ -x "$ZSIM_BIN" ]] && [[ "$REBUILD" == false ]]; then
-    ok "ZSim release binary already exists: $ZSIM_BIN"
-    echo "    To force a rebuild, run: ./setup.sh --rebuild"
-else
-    echo "  Building ZSim with $(nproc) parallel jobs. This may take several minutes..."
+zsim_variant_ready() {
+    local binary="$1"
+    local library="$2"
+    local required_dependency="$3"
+    local forbidden_dependency="$4"
+
+    [[ -x "$binary" && -f "$library" ]] || return 1
+    local dynamic_dependencies
+    dynamic_dependencies="$(readelf -d "$library" 2>/dev/null)" || return 1
+    grep -Fq "Shared library: [$required_dependency]" <<< "$dynamic_dependencies" || return 1
+    ! grep -Fq "Shared library: [$forbidden_dependency]" <<< "$dynamic_dependencies"
+}
+
+build_zsim_variant() {
+    local label="$1"
+    local build_root="$2"
+    local binary="$3"
+    local library="$4"
+    local required_dependency="$5"
+    local forbidden_dependency="$6"
+    local disable_ramulator="$7"
+
+    if [[ "$REBUILD" == false ]] && \
+       zsim_variant_ready "$binary" "$library" "$required_dependency" "$forbidden_dependency"; then
+        ok "ZSim $label variant already built: $binary"
+        return 0
+    fi
+
+    echo "  Building ZSim $label variant with $(nproc) parallel jobs..."
     (
         cd "$ZSIM_DIR"
-        [[ "$REBUILD" == true ]] && scons -c
-        scons --r -j"$(nproc)"
+        if [[ "$disable_ramulator" == true ]]; then
+            unset RAMULATORPATH
+        fi
+        if [[ "$REBUILD" == true ]]; then
+            scons -c --r --buildDir="$build_root"
+        fi
+        scons --r --buildDir="$build_root" -j"$(nproc)"
     )
-    if [[ -x "$ZSIM_BIN" ]]; then
-        ok "ZSim built: $ZSIM_BIN"
+
+    if zsim_variant_ready "$binary" "$library" "$required_dependency" "$forbidden_dependency"; then
+        ok "ZSim $label variant built: $binary"
     else
-        err "ZSim build failed. Check the output above."
+        err "ZSim $label build did not produce the expected backend at: $binary"
     fi
+}
+
+build_zsim_variant \
+    "Ramulator" \
+    "$ZSIM_RAMULATOR_BUILD_ROOT" \
+    "$ZSIM_RAMULATOR_BIN" \
+    "$ZSIM_RAMULATOR_LIB" \
+    "libramulator.so" \
+    "libramulator2.so" \
+    false
+
+if [[ -n "${RAMULATOR2PATH:-}" && -d "$RAMULATOR2PATH" ]]; then
+    build_zsim_variant \
+        "Ramulator2" \
+        "$ZSIM_RAMULATOR2_BUILD_ROOT" \
+        "$ZSIM_RAMULATOR2_BIN" \
+        "$ZSIM_RAMULATOR2_LIB" \
+        "libramulator2.so" \
+        "libramulator.so" \
+        true
+else
+    warn "RAMULATOR2PATH is unavailable; skipping the Ramulator2 ZSim variant."
 fi
 
 # ── 3. Build benchmarks ───────────────────────────────────────────────────────

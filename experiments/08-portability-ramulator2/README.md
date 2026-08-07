@@ -19,24 +19,18 @@ Use the shared experiment entrypoints in `../runner.sh`, `../run-one.sh`, and `.
 
 ## Required ZSim Build
 
-Ramulator and Ramulator2 cannot be active in the same ZSim binary. The default
-repository build enables Ramulator. Before running this experiment, select
-Ramulator2 by rebuilding ZSim in the same shell:
+Ramulator and Ramulator2 cannot be active in the same ZSim binary. `setup.sh`
+therefore creates two persistent release builds:
 
 ```bash
-source .zsim-env
-unset RAMULATORPATH
-cd simulator-source/zsim-bsc
-scons -c
-scons --r -j$(nproc)
-cd ../..
-./experiments/runner.sh 08-portability-ramulator2
+simulator-source/zsim-bsc/build/release/zsim
+simulator-source/zsim-bsc/build/ramulator2/release/zsim
 ```
 
-The experiment runner inspects the built ZSim library and exits with an error
-instead of starting a run unless it is linked to Ramulator2. To restore the
-default Ramulator build afterward, source `.zsim-env` again and clean-rebuild
-ZSim.
+The experiment reference table in `experiments/runner.sh` automatically selects
+the second path for this stage and validates its linked backend before starting
+the run. No manual rebuild or environment-variable change is required after
+setup.
 
 ## Intended Claim
 

@@ -62,8 +62,9 @@ def configure_optional_libs(env):
     }
     # RAMULATOR and RAMULATOR2 cannot both be active at compile time. The
     # generated default environment contains both source paths, so prioritize
-    # RAMULATOR and exclude RAMULATOR2 from that ZSim build. Experiment 08 must
-    # unset RAMULATORPATH and clean-rebuild ZSim to select RAMULATOR2 instead.
+    # RAMULATOR and exclude RAMULATOR2 from that build. setup.sh creates the
+    # isolated Ramulator2 variant in a separate --buildDir with RAMULATORPATH
+    # unset, allowing both binaries to coexist.
     ram1_set = bool(os.environ.get("RAMULATORPATH"))
     ram2_set = bool(os.environ.get("RAMULATOR2PATH"))
     suppress_ram2_define = ram1_set and ram2_set

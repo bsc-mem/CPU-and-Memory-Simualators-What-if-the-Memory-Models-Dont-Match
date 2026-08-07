@@ -77,9 +77,79 @@ fi
 
 CONFIG_PATH="$(resolve_config_path "$EXPERIMENT_DIR")"
 CONFIG_NAME="$(basename "$CONFIG_PATH")"
+EXPERIMENT_ID="$(basename "$EXPERIMENT_DIR")"
 RUN_ONE_SCRIPT="$SCRIPT_DIR/run-one.sh"
 TRAFFIC_GEN_BIN="$BENCH_ROOT/traffic_gen/traffic_gen.x"
-ZSIM_LIB="$REPO_ROOT/simulator-source/zsim-bsc/build/release/libzsim.so"
+
+# Reference table: each runnable experiment selects one persistent ZSim build.
+# DRAMsim3 and DRAMSys are compiled into the default build alongside Ramulator;
+# their experiment configs select the active memory backend at runtime.
+declare -A EXPERIMENT_ZSIM_VARIANT=(
+  [01-baseline]="ramulator"
+  [02-memory-model]="ramulator"
+  [03-clock-scaling]="ramulator"
+  [04-correct-freq]="ramulator"
+  [05-address-mapping]="ramulator"
+  [06-noc]="ramulator"
+  [07-prefetcher]="ramulator"
+  [08-portability-ramulator2]="ramulator2"
+  [09-portability-dramsim3]="ramulator"
+  [10-portability-dramsys]="ramulator"
+)
+
+ZSIM_RAMULATOR_BIN="${ZSIM_RAMULATOR_BIN:-$REPO_ROOT/simulator-source/zsim-bsc/build/release/zsim}"
+ZSIM_RAMULATOR2_BIN="${ZSIM_RAMULATOR2_BIN:-$REPO_ROOT/simulator-source/zsim-bsc/build/ramulator2/release/zsim}"
+ZSIM_VARIANT="${EXPERIMENT_ZSIM_VARIANT[$EXPERIMENT_ID]:-}"
+
+case "$ZSIM_VARIANT" in
+  ramulator)
+    ZSIM_BIN="$ZSIM_RAMULATOR_BIN"
+    REQUIRED_ZSIM_DEPENDENCY="libramulator.so"
+    FORBIDDEN_ZSIM_DEPENDENCY="libramulator2.so"
+    ;;
+  ramulator2)
+    ZSIM_BIN="$ZSIM_RAMULATOR2_BIN"
+    REQUIRED_ZSIM_DEPENDENCY="libramulator2.so"
+    FORBIDDEN_ZSIM_DEPENDENCY="libramulator.so"
+    ;;
+  *)
+    echo "No ZSim variant is mapped for experiment '$EXPERIMENT_ID'." >&2
+    echo "Add the experiment to EXPERIMENT_ZSIM_VARIANT in experiments/runner.sh." >&2
+    exit 2
+    ;;
+esac
+
+ZSIM_LIB="$(dirname "$ZSIM_BIN")/libzsim.so"
+if [[ ! -x "$ZSIM_BIN" || ! -f "$ZSIM_LIB" ]]; then
+  echo "Missing ZSim $ZSIM_VARIANT build for experiment '$EXPERIMENT_ID':" >&2
+  echo "  $ZSIM_BIN" >&2
+  echo "Run ./setup.sh from the repository root to build all configured variants." >&2
+  exit 2
+fi
+
+ZSIM_DYNAMIC_DEPENDENCIES="$(readelf -d "$ZSIM_LIB" 2>/dev/null)" || {
+  echo "Unable to inspect ZSim library: $ZSIM_LIB" >&2
+  exit 2
+}
+if ! grep -Fq "Shared library: [$REQUIRED_ZSIM_DEPENDENCY]" <<< "$ZSIM_DYNAMIC_DEPENDENCIES" || \
+   grep -Fq "Shared library: [$FORBIDDEN_ZSIM_DEPENDENCY]" <<< "$ZSIM_DYNAMIC_DEPENDENCIES"; then
+  echo "ZSim build/backend mismatch for experiment '$EXPERIMENT_ID'." >&2
+  echo "Expected the '$ZSIM_VARIANT' variant at: $ZSIM_BIN" >&2
+  echo "Run ./setup.sh --rebuild to regenerate both isolated ZSim builds." >&2
+  exit 2
+fi
+export ZSIM_BIN
+echo "Using ZSim $ZSIM_VARIANT variant: $ZSIM_BIN"
+
+case "${2:-}" in
+  "") ;;
+  --print-zsim) exit 0 ;;
+  *)
+    echo "Unknown runner option: ${2}" >&2
+    echo "usage: $0 <experiment-id> [--print-zsim]" >&2
+    exit 1
+    ;;
+esac
 
 RWRATIO_MIN=0
 RWRATIO_MAX=100
@@ -93,34 +163,6 @@ for required in "$CONFIG_PATH" "$RUN_ONE_SCRIPT" "$BENCH_ROOT/ptr_chase/ptr_chas
     exit 1
   fi
 done
-
-# ── Enforce the Ramulator2-only build requirement ───────────────────────────────
-if [[ "$(basename "$EXPERIMENT_DIR")" == "08-portability-ramulator2" ]]; then
-  if [[ ! -f "$ZSIM_LIB" ]] || ! grep -aFq 'libramulator2.so' "$ZSIM_LIB"; then
-    cat >&2 <<'EOF'
-ERROR: 08-portability-ramulator2 requires a Ramulator2-only ZSim build.
-The default build enables Ramulator, because Ramulator and Ramulator2 cannot
-be active in the same ZSim binary.
-
-Build ZSim for experiment 08 with:
-  source .zsim-env
-  unset RAMULATORPATH
-  cd simulator-source/zsim-bsc
-  scons -c
-  scons --r -j$(nproc)
-
-Then, from the repository root (in the same shell), run:
-  ./experiments/runner.sh 08-portability-ramulator2
-
-To restore the default Ramulator build afterward:
-  source .zsim-env
-  cd simulator-source/zsim-bsc
-  scons -c
-  scons --r -j$(nproc)
-EOF
-    exit 2
-  fi
-fi
 
 RAW_DIR="$EXPERIMENT_DIR/test-raw"
 mkdir -p "$RAW_DIR"

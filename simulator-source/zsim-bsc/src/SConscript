@@ -1,6 +1,8 @@
 # -*- mode:python -*-
 
 import os
+import subprocess
+import sys
 Import("env")
 
 commonSrcs = ["config.cpp", "galloc.cpp", "log.cpp", "pin_cmd.cpp"]
@@ -22,8 +24,11 @@ libEnv["LINKFLAGS"] += libEnv["PINLINKFLAGS"]
 libEnv["LIBPATH"] += libEnv["PINLIBPATH"]
 libEnv["LIBS"] += libEnv["PINLIBS"]
 
-# Build syscall name file
-def getSyscalls(): return os.popen("python ../../misc/list_syscalls.py").read().strip()
+# Build syscall name file. Resolve from the source root so this works for any
+# --buildDir depth (for example build/ramulator2/release).
+def getSyscalls():
+    script = os.path.join(Dir("#").abspath, "misc", "list_syscalls.py")
+    return subprocess.check_output([sys.executable, script], text=True).strip()
 syscallSrc = libEnv.Substfile("virt/syscall_name.cpp", "virt/syscall_name.cpp.in",
         SUBST_DICT = {"SYSCALL_NAME_LIST" : getSyscalls()})
 

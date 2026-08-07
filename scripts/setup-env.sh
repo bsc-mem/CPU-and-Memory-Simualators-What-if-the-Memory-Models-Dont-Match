@@ -262,6 +262,8 @@ export DRAMSIM3PATH="$DRAMSIM3PATH"
 export RAMULATORPATH="$RAMULATORPATH"
 export RAMULATOR2PATH="$RAMULATOR2PATH"
 export DRAMSYSPATH="$DRAMSYSPATH"
+export ZSIM_RAMULATOR_BIN="$REPO_ROOT/simulator-source/zsim-bsc/build/release/zsim"
+export ZSIM_RAMULATOR2_BIN="$REPO_ROOT/simulator-source/zsim-bsc/build/ramulator2/release/zsim"
 EOF
 
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
