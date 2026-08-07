@@ -12,6 +12,7 @@ SCRIPT_DIR="$(cd "$(dirname "$SCRIPT_REAL")" && pwd -P)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd -P)"
 BENCH_ROOT="$REPO_ROOT/benchmarks"
 DAMOV_RUNNER="$SCRIPT_DIR/00-damov-native/scripts/runner.sh"
+MEM_INTENSIVE_RUNNER="$SCRIPT_DIR/11-mem-intensive/runner.sh"
 
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
@@ -31,6 +32,15 @@ run_damov_native_runner() {
   exec bash "$DAMOV_RUNNER" "$@"
 }
 
+run_mem_intensive_runner() {
+  if [[ ! -f "$MEM_INTENSIVE_RUNNER" ]]; then
+    echo "Missing 11-mem-intensive runner at: $MEM_INTENSIVE_RUNNER" >&2
+    exit 1
+  fi
+
+  exec bash "$MEM_INTENSIVE_RUNNER" "$@"
+}
+
 resolve_experiment_dir() {
   local input="${1:-}"
 
@@ -44,13 +54,16 @@ resolve_experiment_dir() {
     return 0
   fi
 
-  echo "usage: $0 <experiment-id>" >&2
+  echo "usage: $0 <experiment-id> [--print-zsim|--print-plan]" >&2
   echo "or run it from inside one experiment directory." >&2
   exit 1
 }
 
 if [[ "${1:-}" == "00" || "${1:-}" == "00-damov-native" ]]; then
   run_damov_native_runner "${@:2}"
+fi
+if [[ "${1:-}" == "11" || "${1:-}" == "11-mem-intensive" ]]; then
+  run_mem_intensive_runner "${@:2}"
 fi
 
 resolve_config_path() {

@@ -2,6 +2,16 @@
 set -euo pipefail
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+print_plan=false
+
+case "${1:-}" in
+    "") ;;
+    --print-plan) print_plan=true ;;
+    *)
+        echo "usage: $0 [--print-plan]" >&2
+        exit 1
+        ;;
+esac
 
 found_any=false
 
@@ -14,6 +24,10 @@ for stage_dir in "$script_dir"/*/; do
     found_any=true
     stage_name="$(basename "$stage_dir")"
 
+    if [[ "$print_plan" == true ]]; then
+        echo "==> Would run $stage_name"
+        continue
+    fi
     echo "==> Running $stage_name"
     (
         cd "$stage_dir"

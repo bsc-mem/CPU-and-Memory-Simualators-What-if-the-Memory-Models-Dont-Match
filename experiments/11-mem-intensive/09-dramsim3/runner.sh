@@ -13,7 +13,9 @@ do
         export arr=$arra
 
         # creat simulation folder
-        echo ${arr}
+        echo "============================================================="
+        echo "Benchmark: ${arr}"
+        echo "============================================================="
         if [ -d "${arr}" ]; then
                 rm -rf "${arr}"
         fi
@@ -45,4 +47,3 @@ do
         
         cd ../
 done
-

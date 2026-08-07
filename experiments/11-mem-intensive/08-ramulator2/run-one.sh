@@ -19,9 +19,17 @@ find_zsim_bin() {
   return 1
 }
 
-zsim_bin="$(find_zsim_bin || true)"
+if [[ -n "${ZSIM_BIN:-}" ]]; then
+  if [[ ! -x "$ZSIM_BIN" ]]; then
+    echo "Selected ZSim binary is not executable: $ZSIM_BIN" >&2
+    exit 1
+  fi
+  zsim_bin="$ZSIM_BIN"
+else
+  zsim_bin="$(find_zsim_bin || true)"
+fi
 if [[ -z "$zsim_bin" ]]; then
-  echo "Unable to locate simulator-source/zsim-bsc/build/release/zsim from $(pwd)." >&2
+  echo "Unable to locate the selected ZSim binary from $(pwd)." >&2
   exit 1
 fi
 
