@@ -6,6 +6,9 @@ dependencies/
 experiments/*/results/generated/
 experiments/*/test-raw/
 !experiments/00-damov-native/test-raw/
+# Experiment 11 writes raw results directly into per-stage workload directories.
+experiments/11-mem-intensive/*/ptr_chase/
+experiments/11-mem-intensive/*/stream-*/
 experiments/**/build/
 **/.sconsign.dblite
 **/*.o
@@ -17,6 +20,7 @@ benchmarks/ptr_chase/arraygen
 benchmarks/ptr_chase/ptr_chase
 benchmarks/traffic_gen/build/
 benchmarks/traffic_gen/traffic_gen.x
+benchmarks/stream-*/testing/output/
 .DS_Store
 ._*
 *.tar
