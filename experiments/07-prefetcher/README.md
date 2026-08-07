@@ -17,13 +17,24 @@ This stage corresponds to Figure 10c in the paper.
 
 Use the shared experiment entrypoints in `../runner.sh`, `../run-one.sh`, and `../plot.py`.
 
+## Run and Plot
+
+From the repository root, after `./setup.sh`:
+
+```bash
+source .zsim-env
+./experiments/runner.sh 07-prefetcher
+./experiments/plot.py experiments/07-prefetcher/test-raw \
+  --config-dir experiments/07-prefetcher
+```
+
 ## Intended Claim
 
 This stage is the closest-to-hardware Ramulator result in the current paper flow. Relative to Figure 10a, it combines the realistic NoC and the prefetcher on top of the corrected interface and address mapping.
 
 ## Reproduction Note
 
-The authoritative drop available so far is the final combined stage, not a standalone NoC-only snapshot. As a result, this folder is the source of truth for Figure 10c, while `06-noc` remains reserved for a future NoC-only drop if one is shared later.
+This folder contains the combined address-mapping, NoC, and prefetcher configuration used for Figure 10c. The `06-noc` folder contains the preceding NoC-only stage.
 
 ## Raw Results
 
@@ -31,4 +42,3 @@ The authoritative drop available so far is the final combined stage, not a stand
 | :--- | :--- |
 | Raw archive | `https://zenodo.org/records/21760832/files/07-prefetcher.zip?download=1` |
 | MD5SUM | `1e4fd36b3c25af7603f2e817c2448980` |
-| Status | `PENDING_EVALUATION` |

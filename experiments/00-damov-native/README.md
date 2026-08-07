@@ -1,10 +1,10 @@
-# 00-system-agnostic
+# 00-damov-native
 
 This experiment preserves the existing system-agnostic seed that was already present in the repository. It is useful as a structural starting point for the public artifact, but it is not the main paper-result path.
 
 ## Paper Figure
 
-This stage is not currently tied to a main paper figure. It is kept as a system-agnostic structural seed.
+This stage does not correspond to a main paper figure. It provides the DAMOV native reference setup.
 
 ## Current Contents
 
@@ -16,6 +16,17 @@ This stage is not currently tied to a main paper figure. It is kept as a system-
 ## DAMOV Source Changes
 
 The DAMOV simulator logic is intentionally kept unchanged for this artifact. The local updates are limited to build and portability plumbing: the SCons scripts were updated to run with Python 3, syscall handling was refreshed for newer Ubuntu releases, and DAMOV now reuses the root project dependencies resolved by `setup.sh` (`PINPATH` and `RAMULATORPATH`) instead of duplicating Pin and Ramulator source trees under `damov-src`.
+
+## Build and Run
+
+From the repository root:
+
+```bash
+./setup.sh
+./setup.sh --build-damov
+source .zsim-env
+./experiments/runner.sh 00-damov-native
+```
 
 ## Raw Results
 

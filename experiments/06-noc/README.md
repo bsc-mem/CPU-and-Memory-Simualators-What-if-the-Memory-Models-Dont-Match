@@ -17,6 +17,17 @@ This stage corresponds to Figure 10b in the paper.
 
 Use the shared experiment entrypoints in `../runner.sh`, `../run-one.sh`, and `../plot.py`.
 
+## Run and Plot
+
+From the repository root, after `./setup.sh`:
+
+```bash
+source .zsim-env
+./experiments/runner.sh 06-noc
+./experiments/plot.py experiments/06-noc/test-raw \
+  --config-dir experiments/06-noc
+```
+
 ## Intended Claim
 
 This stage isolates the effect of the realistic NoC refinement. Relative to Figure 10a, it closes part of the latency gap to hardware while keeping the same corrected interface flow.
@@ -31,4 +42,3 @@ The authoritative Figure 10b source drop still relied on a source-controlled Ram
 | :--- | :--- |
 | Raw archive | `https://zenodo.org/records/21760832/files/06-noc.zip?download=1` |
 | MD5SUM | `5a6fdeb0af978f8eaf4f355e46453a54` |
-| Status | `PENDING_EVALUATION` |

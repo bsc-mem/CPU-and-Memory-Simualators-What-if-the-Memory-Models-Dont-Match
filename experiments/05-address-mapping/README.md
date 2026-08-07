@@ -17,6 +17,17 @@ This stage corresponds to Figure 10a in the paper.
 
 Use the shared experiment entrypoints in `../runner.sh`, `../run-one.sh`, and `../plot.py`.
 
+## Run and Plot
+
+From the repository root, after `./setup.sh`:
+
+```bash
+source .zsim-env
+./experiments/runner.sh 05-address-mapping
+./experiments/plot.py experiments/05-address-mapping/test-raw \
+  --config-dir experiments/05-address-mapping
+```
+
 ## Intended Claim
 
 This stage isolates the effect of the Intel Skylake address mapping after the interface timing model has already been corrected. Relative to Figure 8, the public `sb.cfg` stays functionally the same and the stage difference comes from Ramulator's address decomposition and hashing.
@@ -31,4 +42,3 @@ The authoritative Figure 10a source drop carries the same top-level `sb.cfg` sha
 | :--- | :--- |
 | Raw archive | `https://zenodo.org/records/21760832/files/05-address-mapping.zip?download=1` |
 | MD5SUM | `74bb3d8d63cf43ddd06929b9dc27a7f9` |
-| Status | `PENDING_EVALUATION` |

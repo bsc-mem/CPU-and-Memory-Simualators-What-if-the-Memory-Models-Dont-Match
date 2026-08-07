@@ -14,7 +14,7 @@ Primary one-shot entrypoint for first-time setup and rebuilds. It wraps dependen
 ```
 
 ### `setup-env.sh`
-Generates the `.zsim-env` file at the repository root. The four memory-simulator paths (`DRAMSIM3PATH`, `RAMULATORPATH`, `RAMULATOR2PATH`, `DRAMSYSPATH`) are resolved automatically from the repo. `PINPATH` and `HDF5_HOME` are discovered from common system prefixes; if missing, the script attempts to download known-good bundles into `dependencies/`.
+Generates the `.zsim-env` file at the repository root. The four memory-simulator paths (`DRAMSIM3PATH`, `RAMULATORPATH`, `RAMULATOR2PATH`, `DRAMSYSPATH`) come from this repository. The script searches for Pin 2.14 and HDF5 and downloads the pinned bundles into `dependencies/` when it cannot find them.
 
 ```bash
 ./scripts/setup-env.sh
@@ -39,11 +39,14 @@ The summary reports mean, mean-absolute, and maximum-absolute deltas in both nat
 ```bash
 ./scripts/compare-results.sh <stage-a> <stage-b>
 # Example:
-./scripts/compare-results.sh 01-baseline 04-model-correct
+./scripts/compare-results.sh 01-baseline 04-correct-freq
 ```
 
 ### `download-raw.sh`
-Downloads the externally hosted raw artifacts for a given stage when URLs are published in the stage's `raw-manifest.csv`. See the [Raw Data Policy](../README.md#5-raw-data-policy) for details on what is hosted externally.
+Consumes a `raw-manifest.csv` when a stage provides one. The current artifact
+links its published archives from the [raw-results table](../README.md#51-raw-results)
+instead of shipping manifests, so this helper is not part of the standard run
+workflow.
 
 ```bash
 ./scripts/download-raw.sh <stage>
@@ -72,12 +75,7 @@ source .zsim-env
 
 **Compare two stages** (works against committed CSVs or freshly generated ones):
 ```bash
-./scripts/compare-results.sh 01-baseline 04-model-correct
-```
-
-**Download published raw artifacts for one stage** (if manifest URLs are final):
-```bash
-./scripts/download-raw.sh 01-baseline
+./scripts/compare-results.sh 01-baseline 04-correct-freq
 ```
 
 -> *For details on `runner.sh`, `run-one.sh`, and the plotting pipeline see [`experiments/README.md`](../experiments/README.md).*

@@ -19,10 +19,20 @@ This stage corresponds to Figure 11d in the paper.
 
 Use the shared experiment entrypoints in `../runner.sh`, `../run-one.sh`, and `../plot.py`.
 
+## Run and Plot
+
+From the repository root, after `./setup.sh`:
+
+```bash
+source .zsim-env
+./experiments/runner.sh 10-portability-dramsys
+./experiments/plot.py experiments/10-portability-dramsys/test-raw \
+  --config-dir experiments/10-portability-dramsys
+```
+
 ## Raw Results
 
 | Item | Value |
 | :--- | :--- |
 | Raw archive | `https://zenodo.org/records/21760832/files/10-dramsys.zip?download=1` |
 | MD5SUM | `cc52eb538c221228e72004a9581f4388` |
-| Status | `PENDING_EVALUATION` |

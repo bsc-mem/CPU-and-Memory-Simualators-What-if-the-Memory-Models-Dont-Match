@@ -1,3 +1,9 @@
+# Artifact Build Note
+
+From the repository root, run `./setup.sh` followed by
+`./setup.sh --build-damov`. The upstream ZSim setup notes below do not describe
+the shared Pin and Ramulator paths used by this artifact.
+
 zsim
 ====
 
@@ -239,4 +245,3 @@ current style used elsewhere. For example, the parts of code that deal with Pin
 follow a style consistent with pintools.
 
 Happy hacking, and hope you find zsim useful!
-

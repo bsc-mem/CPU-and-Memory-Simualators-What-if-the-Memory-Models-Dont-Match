@@ -17,6 +17,17 @@ This stage corresponds to Figure 11b in the paper.
 
 Use the shared experiment entrypoints in `../runner.sh`, `../run-one.sh`, and `../plot.py`.
 
+## Run and Plot
+
+From the repository root, after `./setup.sh`:
+
+```bash
+source .zsim-env
+./experiments/runner.sh 08-portability-ramulator2
+./experiments/plot.py experiments/08-portability-ramulator2/test-raw \
+  --config-dir experiments/08-portability-ramulator2
+```
+
 ## Required ZSim Build
 
 Ramulator and Ramulator2 cannot be active in the same ZSim binary. `setup.sh`
@@ -46,4 +57,3 @@ The committed portability drop contains the application and interface processed 
 | :--- | :--- |
 | Raw archive | `https://zenodo.org/records/21760832/files/08-ramulator2.zip?download=1` |
 | MD5SUM | `60cb5aac4b34df03c297bdfa7ef85cec` |
-| Status | `PENDING_EVALUATION` |

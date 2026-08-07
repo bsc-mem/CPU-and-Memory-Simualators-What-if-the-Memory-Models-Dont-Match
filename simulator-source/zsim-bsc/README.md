@@ -1,3 +1,11 @@
+# Artifact Build Note
+
+For this artifact, run `./setup.sh` from the repository root. The script builds
+the required Ramulator and Ramulator2 ZSim variants and writes `.zsim-env`.
+Use `./experiments/runner.sh <experiment-id>` to run a paper experiment. The
+upstream ZSim documentation below is reference material and does not describe
+the artifact's multi-backend build.
+
 zsim
 ====
 
@@ -239,4 +247,3 @@ current style used elsewhere. For example, the parts of code that deal with Pin
 follow a style consistent with pintools.
 
 Happy hacking, and hope you find zsim useful!
-

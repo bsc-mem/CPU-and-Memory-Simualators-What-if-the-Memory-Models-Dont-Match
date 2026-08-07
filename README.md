@@ -37,7 +37,7 @@ The repository is organized so that the source code is shared once, but is highl
 
 | Directory           | Purpose & Documentation                                                                                                                                                                                                                                                                              |
 | :------------------ | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `simulator-source/` | **The Simulators.** Contains ZSim, DRAMsim3, Ramulator, Ramulator2, and DRAMSys. These are the final, corrected versions with all changes built-in. <br>-> _See [`simulator-source/README.md`](simulator-source/README.md) for build instructions and environment setup._                            |
+| `simulator-source/` | **The Simulators.** Contains the modified ZSim source and the Ramulator, Ramulator2, DRAMsim3, and DRAMSys source trees used by the artifact. <br>-> _See [`simulator-source/README.md`](simulator-source/README.md) for dependency and build details._                            |
 | `benchmarks/`       | **The Workloads.** Contains the pointer-chasing and traffic-generation benchmarks used to generate bandwidth-latency curves.                                                                                                                                                                         |
 | `experiments/`      | **The Configurations & Results.** One folder per paper stage. Runnable stages include `sb.cfg`. Committed outputs, when present, live under `processed/` and `figures/`. <br>-> _See [`experiments/README.md`](experiments/README.md) for details on the execution flow and shared run entrypoints._ |
 | `scripts/`          | **The Automation.** Repository-level helpers for environment setup, benchmark builds, result processing, and comparison. <br>-> _See [`scripts/README.md`](scripts/README.md) for the script catalog._                                                                                               |
@@ -48,7 +48,19 @@ The processed figures and configuration files are kept in Git. Most raw simulato
 
 ## 2. Environment Setup
 
-Run the single entry-point script from the repository root on a **Linux** machine:
+Install the host packages on Ubuntu or Debian:
+
+```bash
+sudo apt update
+sudo apt install build-essential cmake scons libconfig++-dev libelf-dev \
+  binutils curl unzip python3 python3-pip pkg-config
+python3 -m pip install --user pandas matplotlib
+```
+
+The paper runs used GCC 11. The compiler must support C++20 for Ramulator2, and
+CMake must be version 3.25 or newer.
+
+Run the setup script from the repository root:
 
 ```bash
 ./setup.sh
@@ -56,11 +68,18 @@ Run the single entry-point script from the repository root on a **Linux** machin
 
 This handles everything in sequence:
 
-1. **Checks system dependencies** — GCC, cmake, scons, libconfig++, Python 3 with pandas/matplotlib
-2. **Generates `.zsim-env`** — auto-resolves in-repo paths and tries to locate Pin/HDF5; if either dependency is missing, configure the dependency URLs in `scripts/setup-env.sh` or install it manually
-3. **Builds memory simulators** — compiles Ramulator, DRAMsim3, Ramulator2, and DRAMSys libraries
-4. **Builds ZSim** — release binary at `simulator-source/zsim-bsc/build/release/zsim`
-5. **Builds benchmarks** — `ptr_chase` and `traffic_gen` under `benchmarks/`
+1. Checks the compiler, CMake, SCons, binutils, libconfig++, and Python packages.
+2. Finds Pin 2.14 and HDF5 on the host or downloads the pinned bundles into `dependencies/`.
+3. Builds Ramulator, Ramulator2, DRAMsim3, and DRAMSys. Their source trees are already in this repository. DRAMSys and Ramulator2 fetch their CMake dependencies during the first build.
+4. Builds separate Ramulator and Ramulator2 ZSim binaries because one ZSim binary cannot link both backends.
+5. Builds `ptr_chase` and `traffic_gen`. Experiment 11 uses the tracked STREAM executables under `benchmarks/stream-*/testing/`.
+
+Setup writes `.zsim-env`, but it cannot change the parent shell. Source the file
+before running an experiment:
+
+```bash
+source .zsim-env
+```
 
 To force a clean rebuild after pulling changes:
 
@@ -68,9 +87,15 @@ To force a clean rebuild after pulling changes:
 ./setup.sh --rebuild
 ```
 
-> **System requirements:** Linux, a C++17 compiler, CMake 3.25 or newer, scons, libconfig++, Python 3 with pandas and matplotlib, plus network access for DRAMSys dependencies. `ptr_chase` requires `linux/perf_event.h`.
+Experiment 00 also needs its DAMOV-specific build after the main setup:
+
+```bash
+./setup.sh --build-damov
+```
+
+> **System requirements:** Linux, a C++20 compiler, CMake 3.25 or newer, SCons, libconfig++, libelf, binutils, Python 3 with pandas and matplotlib, and network access for dependency downloads. `ptr_chase` requires `linux/perf_event.h`.
 >
-> **Pin on modern kernels:** Pin 2.14 may refuse to start on Linux 4.0+ kernels. Pass `-injection child` to work around the version check. See [`simulator-source/README.md`](simulator-source/README.md) for details.
+> **Pin on modern kernels:** The modified ZSim launcher adds Pin's child-injection workaround on Linux 4.0 and newer kernels.
 
 -> _For manual dependency/build steps see [`simulator-source/README.md`](simulator-source/README.md). For script-by-script setup details see [`scripts/README.md`](scripts/README.md)._
 
@@ -84,7 +109,7 @@ The paper evaluates the impact of interface details through a sequence of cumula
 
 | Step                                                    | Description / Focus                                                            | Figure               |
 | :------------------------------------------------------ | :----------------------------------------------------------------------------- | :------------------- |
-| [`00-damov-native`](experiments/00-damov-native/)       | Native baseline reference stage (not part of the generic `runner.sh` pipeline) | N/A                  |
+| [`00-damov-native`](experiments/00-damov-native/)       | Native DAMOV reference, dispatched to its dedicated runner                     | N/A                  |
 | [`01-baseline`](experiments/01-baseline/)               | Base simulator coupling                                                        | Figure 2b, 2c and 2d |
 | [`02-memory-model`](experiments/02-memory-model/)       | Follow-up interface configuration                                              | Figure 6             |
 | [`03-clock-scaling`](experiments/03-clock-scaling/)     | Follow-up frequency-divider configuration                                      | Figure 7             |
@@ -92,7 +117,7 @@ The paper evaluates the impact of interface details through a sequence of cumula
 | [`05-address-mapping`](experiments/05-address-mapping/) | Physical address mapping accuracy                                              | Figure 10a           |
 | [`06-noc`](experiments/06-noc/)                         | Realistic Network-on-Chip refinement                                           | Figure 10b           |
 | [`07-prefetcher`](experiments/07-prefetcher/)           | Final Ramulator stage with prefetcher                                          | Figure 10c           |
-| [`11-mem-intensive`](experiments/11-mem-intensive/)     | Pointer-chase and STREAM results corresponding to each modification            | Figure 9             |
+| [`11-mem-intensive`](experiments/11-mem-intensive/)     | Pointer-chase and STREAM results across correction stages and memory simulators | Figures 9 and 11e    |
 
 ### 3.2. Portability Evaluation
 
@@ -121,7 +146,7 @@ source .zsim-env
 
 `runner.sh` clears prior `test-raw/measurment_*` directories for the selected stage before creating a fresh run.
 
-For `08-portability-ramulator2`, use a ZSim build configured for Ramulator2-only linkage: source `.zsim-env`, unset `RAMULATORPATH`, and clean-rebuild ZSim. Ramulator and Ramulator2 cannot be active in the same ZSim binary; the default build selects Ramulator. `runner.sh` inspects the built library and exits with explicit rebuild instructions unless it is linked to Ramulator2.
+Ramulator and Ramulator2 cannot be active in the same ZSim binary, so `setup.sh` builds them into separate persistent output directories. `experiments/runner.sh` contains the experiment-to-variant reference table and automatically selects the Ramulator2 build for `08-portability-ramulator2`; the other staged experiments use the default Ramulator build.
 
 The committed paper figures are under `experiments/<stage>/figures/` and are not touched by the commands above. To overwrite them intentionally:
 
@@ -168,7 +193,7 @@ The repository contains the configurations, scripts, processed CSV files, and fi
 | `08-portability-ramulator2` | [Download](https://zenodo.org/records/21760832/files/08-ramulator2.zip?download=1)      | `60cb5aac4b34df03c297bdfa7ef85cec` |
 | `09-portability-dramsim3`   | [Download](https://zenodo.org/records/21760832/files/09-dramsim3.zip?download=1)        | `87406cce9943ea51eb6a98ebc8a350f1` |
 | `10-portability-dramsys`    | [Download](https://zenodo.org/records/21760832/files/10-dramsys.zip?download=1)         | `cc52eb538c221228e72004a9581f4388` |
-| `11-mem-intensive`          | `N/A`                                                                                   | `N/A`                              |
+| `11-mem-intensive`          | Generated locally by `./experiments/runner.sh 11-mem-intensive` (50 simulation points)  | `N/A`                              |
 
 ### 5.2. Regenerating Results
 
@@ -179,6 +204,17 @@ source .zsim-env
 ./experiments/runner.sh 01-baseline
 ./experiments/plot.py experiments/01-baseline/test-raw \
   --config-dir experiments/01-baseline
+```
+
+Experiment 11 uses the same shared runner interface and generates paper Figures
+9 and 11e. Its raw data is produced locally rather than downloaded: the
+experiment needs only five benchmark points for each of ten unique stages, or
+50 simulation points in total. The seven correction stages feed Figure 9, and
+Figure 11e reuses the final Ramulator stage alongside three portability stages.
+
+```bash
+./experiments/runner.sh 11-mem-intensive
+./experiments/11-mem-intensive/plot.py
 ```
 
 ---

@@ -9,7 +9,7 @@ The traffic generator benchmark creates sustained memory traffic towards main me
 1. **Read ratio** (50-100% in 2% increments): Controls the proportion of read requests in total traffic
 2. **Pause value**: Injects delays between memory requests to modulate generated bandwidth
 
-This benchmark extends the original STREAM benchmark [[1]()] with significant modifications for memory system characterization. It uses MPI for parallel execution and optional OpenMP directives for threading.
+This benchmark extends the original [STREAM benchmark][1] with modifications for memory-system characterization. It uses MPI for parallel execution and optional OpenMP directives for threading.
 
 ## Key Modifications from STREAM
 

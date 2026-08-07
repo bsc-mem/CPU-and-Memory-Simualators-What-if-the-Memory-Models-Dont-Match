@@ -17,6 +17,17 @@ This stage corresponds to Figure 11c in the paper.
 
 Use the shared experiment entrypoints in `../runner.sh`, `../run-one.sh`, and `../plot.py`.
 
+## Run and Plot
+
+From the repository root, after `./setup.sh`:
+
+```bash
+source .zsim-env
+./experiments/runner.sh 09-portability-dramsim3
+./experiments/plot.py experiments/09-portability-dramsim3/test-raw \
+  --config-dir experiments/09-portability-dramsim3
+```
+
 ## Intended Claim
 
 This stage shows that the corrected interface approach is not limited to Ramulator and can be carried over to DRAMsim3 while preserving the same overall platform model.
@@ -31,4 +42,3 @@ The committed portability drop contains the application and interface processed 
 | :--- | :--- |
 | Raw archive | `https://zenodo.org/records/21760832/files/09-dramsim3.zip?download=1` |
 | MD5SUM | `87406cce9943ea51eb6a98ebc8a350f1` |
-| Status | `PENDING_EVALUATION` |
