@@ -36,5 +36,5 @@ This stage is the reference point for the later corrected-interface comparison.
 
 | Item | Value |
 | :--- | :--- |
-| Raw archive | `https://zenodo.org/records/21760832/files/01-baseline.tar?download=1` |
-| MD5SUM | `bf559ef6fd77f2718e5257991d73b41d` |
+| Raw archive | `https://zenodo.org/records/21760832/files/01-baseline.zip?download=1` |
+| MD5SUM | `38f1cf9f9a1f6f3c2adaec688fabcf4d` |

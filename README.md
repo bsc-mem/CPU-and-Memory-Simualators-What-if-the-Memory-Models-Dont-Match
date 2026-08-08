@@ -202,7 +202,7 @@ The repository contains the configurations, scripts, processed CSV files, and fi
 | Step                        | Raw-data location                                                                       | MD5SUM                             |
 | :-------------------------- | :-------------------------------------------------------------------------------------- | :--------------------------------- |
 | `00-damov-native`           | [`experiments/00-damov-native/test-raw/`](experiments/00-damov-native/test-raw/)        | `N/A`                              |
-| `01-baseline`               | [Download](https://zenodo.org/records/21760832/files/01-baseline.tar?download=1)        | `bf559ef6fd77f2718e5257991d73b41d` |
+| `01-baseline`               | [Download](https://zenodo.org/records/21760832/files/01-baseline.zip?download=1)        | `38f1cf9f9a1f6f3c2adaec688fabcf4d` |
 | `02-memory-model`           | [Download](https://zenodo.org/records/21760832/files/02-memory-model.zip?download=1)    | `88429850cb804319a6528e0c0735d7fa` |
 | `03-clock-scaling`          | [Download](https://zenodo.org/records/21760832/files/03-clock-scaling.zip?download=1)   | `4ce964d0cb5bbb82a378e3939dac1260` |
 | `04-correct-freq`           | [Download](https://zenodo.org/records/21760832/files/04-correct-freq.zip?download=1)    | `275fea55aeaca6edf0ca918d2a19eaac` |
