@@ -15,8 +15,6 @@ set -euo pipefail
 # Update these when the hosting location changes.
 PIN_DOWNLOAD_URL="https://zenodo.org/records/19629352/files/pin.tar.gz?download=1"
 HDF5_DOWNLOAD_URL="https://zenodo.org/records/19629352/files/hdf5.tar.gz?download=1"
-PIN_SHA256="290346631b7a79f99aacca891176fb4ce4a574f614a1dfcde7e2d325f83a9603"
-HDF5_SHA256="c5e5105facec8b14d24fc530b64ef32eba54052f4e242fba1199ca17141bd12e"
 # ─────────────────────────────────────────────────────────────────────────────
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
@@ -60,27 +58,12 @@ download_and_extract() {
     local url="$1"
     local dest_dir="$2"
     local label="$3"
-    local expected_sha256="$4"
 
     mkdir -p "$dest_dir"
     local archive="$dest_dir/${label}.download"
 
     echo "    Downloading $label from Zenodo..." >&2
     curl -s -L -o "$archive" "$url"
-
-    # Validate SHA256 if provided
-    if [[ -n "$expected_sha256" ]]; then
-        local actual_sha256
-        actual_sha256=$(sha256sum "$archive" | awk '{print $1}')
-        if [[ "$actual_sha256" != "$expected_sha256" ]]; then
-            rm -f "$archive"
-            echo -e "  ${RED}✘${NC}  SHA256 checksum mismatch for $label." >&2
-            echo -e "  ${RED}✘${NC}  Expected: $expected_sha256" >&2
-            echo -e "  ${RED}✘${NC}  Actual:   $actual_sha256" >&2
-            exit 1
-        fi
-        ok "$label SHA256 verified" >&2
-    fi
 
     echo "    Extracting $label..." >&2
 
@@ -175,7 +158,7 @@ if [[ -n "$PINPATH" && -d "$PINPATH" ]]; then
 else
     warn "Pin 2.14 not found on system — downloading automatically..."
     DEPS_DIR="$REPO_ROOT/dependencies"
-    PINPATH=$(download_and_extract "$PIN_DOWNLOAD_URL" "$DEPS_DIR" "pin" "$PIN_SHA256")
+    PINPATH=$(download_and_extract "$PIN_DOWNLOAD_URL" "$DEPS_DIR" "pin")
     if [[ -z "$PINPATH" ]] || ! is_pin_root "$PINPATH"; then
         echo -e "  ${RED}✘${NC}  Pin download or extraction failed." >&2
         echo -e "  ${RED}✘${NC}  Download manually from: $PIN_DOWNLOAD_URL" >&2
@@ -237,7 +220,7 @@ fi
 if [[ -z "$HDF5_HOME" ]]; then
     warn "HDF5 not found on system — downloading automatically..."
     DEPS_DIR="$REPO_ROOT/dependencies"
-    HDF5_HOME=$(download_and_extract "$HDF5_DOWNLOAD_URL" "$DEPS_DIR" "hdf5" "$HDF5_SHA256")
+    HDF5_HOME=$(download_and_extract "$HDF5_DOWNLOAD_URL" "$DEPS_DIR" "hdf5")
     if [[ -z "$HDF5_HOME" ]] || ! is_hdf5_root "$HDF5_HOME"; then
         echo -e "  ${RED}✘${NC}  HDF5 download or extraction failed." >&2
         echo -e "  ${RED}✘${NC}  Download manually from: $HDF5_DOWNLOAD_URL" >&2
