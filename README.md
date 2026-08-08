@@ -144,6 +144,25 @@ source .zsim-env
 # → writes to test-output/01-baseline/processed/ and test-output/01-baseline/figures/
 ```
 
+The command above applies to experiments 01 through 10. Experiment 11 stores
+one result per benchmark and stage, so use its plotter:
+
+```bash
+./experiments/runner.sh 11-mem-intensive
+./experiments/11-mem-intensive/plot.py
+```
+
+`experiments/11-mem-intensive/plot.py` writes the processed CSV and generates
+Figures 9 and 11e. `experiments/plot.py` expects the `measurment_*` sweep layout
+used by experiments 01 through 10.
+
+> **Reproducibility note:** Results from a new run may not exactly match the paper
+> figures or archived raw results. Host hardware, operating-system and library
+> versions, compiler versions, and runtime variation can affect the measured
+> values. Differences of 1% to 4% may occur and do not change the paper's
+> overall conclusions. To reproduce the exact paper figures, use the raw data
+> linked or stored in [Section 5.1](#51-raw-results).
+
 `runner.sh` clears prior `test-raw/measurment_*` directories for the selected stage before creating a fresh run.
 
 Ramulator and Ramulator2 cannot be active in the same ZSim binary, so `setup.sh` builds them into separate persistent output directories. `experiments/runner.sh` contains the experiment-to-variant reference table and automatically selects the Ramulator2 build for `08-portability-ramulator2`; the other staged experiments use the default Ramulator build.
