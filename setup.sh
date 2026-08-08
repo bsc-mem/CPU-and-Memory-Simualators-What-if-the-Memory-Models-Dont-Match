@@ -63,6 +63,28 @@ else
     err "GCC not found. Install GCC 11: sudo apt install gcc g++"
 fi
 
+# G++ with C++20 support (Ramulator2 requires C++20; other components use
+# C++17 or C++11).
+if command -v g++ &>/dev/null; then
+    ok "G++: $(g++ --version | head -1)"
+else
+    err "G++ not found. Install a C++20-capable compiler: sudo apt install g++"
+fi
+
+if g++ -std=c++20 -x c++ -fsyntax-only - &>/dev/null <<'CPP'
+#include <concepts>
+
+template <typename T>
+concept Integral = std::integral<T>;
+
+static_assert(Integral<int>);
+CPP
+then
+    ok "G++ supports C++20"
+else
+    err "G++ does not support the required C++20 standard. Install GCC/G++ 11 or newer."
+fi
+
 # readelf (used to validate that each ZSim variant links exactly one Ramulator)
 if command -v readelf &>/dev/null; then
     ok "readelf: found"
